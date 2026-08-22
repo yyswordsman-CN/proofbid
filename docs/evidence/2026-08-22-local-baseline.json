@@ -1,0 +1,70 @@
+{
+  "schema_version": "proofbid.local-baseline/v1",
+  "captured_at": "2026-08-22T15:16:07+08:00",
+  "source_commit": "699a6f53d2ea5a0a900a00a60bcbfb9dd7cbede6",
+  "author": "yyswordsman-CN <yyswordsman-CN@users.noreply.github.com>",
+  "environment": {
+    "python": "3.14.6",
+    "node": "22.22.3",
+    "npm": "10.9.8",
+    "docker_platform": "linux/arm64"
+  },
+  "checks": {
+    "python_tests": {
+      "command": "PYTHONPATH=src .venv/bin/python -m pytest -q",
+      "status": "passed",
+      "passed": 55,
+      "failed": 0,
+      "real_seconds": 7.89,
+      "warnings": 3
+    },
+    "synthetic_eval": {
+      "command": "PYTHONPATH=src .venv/bin/python -m proofbid eval --output build/evidence-baseline/eval",
+      "status": "passed",
+      "passed": 50,
+      "failed": 0,
+      "suite_duration_ms": 27300.36,
+      "real_seconds": 27.78,
+      "result_sha256": "c2e2d4f9b520d857c2992002dd04d7618c8884b408e5ba342820337de8d2a5e2"
+    },
+    "frontend_build": {
+      "command": "npm run build",
+      "status": "passed",
+      "real_seconds": 0.74,
+      "index_sha256": "43180c31c1b973dac3baeb56394c1b105d774e9ac899b17a19fd3cc16370a4a9",
+      "css_sha256": "213e7f43dc28c420cef39f306665de2dd48dfd08888a7",
+      "javascript_sha256": "5cf23e17fa2ee5487f94b8587b1895d3a699f9b77207099eb72cf9f03eb470ed"
+    },
+    "playwright": {
+      "command": "npm run test:e2e with uvicorn proofbid.service:app on 127.0.0.1:8080",
+      "status": "passed",
+      "passed": 4,
+      "failed": 0,
+      "real_seconds": 3.77,
+      "note": "The first sandbox attempt could not launch Chromium; the first escalated attempt had no API server. The final run started the documented FastAPI service and passed all desktop/mobile assertions."
+    },
+    "docker": {
+      "build_command": "docker build -t proofbid:baseline-699a6f5 .",
+      "run_command": "docker run --rm proofbid:baseline-699a6f5 proofbid agent-run --workspace /app/examples/complete_tender --output /tmp/green",
+      "status": "passed",
+      "image_id": "sha256:3d7e7ebc3545ce96937df9e2146784149e2587056a73303354380bce88a4c3a0",
+      "container_user": "65532:65532",
+      "terminal_status": "completed",
+      "artifact_integrity_passed": true,
+      "missing_item_count": 0
+    }
+  },
+  "known_gaps": [
+    {
+      "code": "BLOCKED_FIXTURE_HAS_SIX_MISSING_ITEMS",
+      "observed_missing_item_count": 6,
+      "blocked_bundle_sha256": "0b4e1a020a359039ecc2518e91640a6117ed92bf17341d99845ebd011ab5d50d",
+      "blocked_manifest_sha256": "caa940348037ad6d1a4fc06f6a42c5b4234f8c08d3bcc17b4cc8a2719fdb43f7"
+    },
+    {
+      "code": "REAL_AGENT_ARTIFACT_USES_SCRIPTED_PLANNER_RECEIPT",
+      "observed_provider": "proofbid.scripted-policy",
+      "real_gemini_verified": false
+    }
+  ]
+}
