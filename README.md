@@ -129,7 +129,7 @@ npm run build
 npm run test:e2e
 ```
 
-The latest post-change local run passed 65 Python tests and 6 Playwright desktop/mobile checks. Treat these counts as a dated snapshot, not a permanently fixed target.
+The latest post-change local run passed 67 Python tests and 6 Playwright desktop/mobile checks. Treat these counts as a dated snapshot, not a permanently fixed target.
 
 The Playwright suite covers desktop and mobile layouts, both public fixture entry points, the complete event-to-download route, and horizontal overflow. Python tests cover deterministic regression, green/blocked/recovery agent routes, fail-closed contracts, API 202/poll/download gates, manifests, ZIPs, Word, and Excel consistency.
 

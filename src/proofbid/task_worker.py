@@ -10,6 +10,7 @@ from pathlib import Path
 from typing import Any
 
 from .agent_runtime_v2 import run_scripted_agent_pipeline
+from .paths import project_root
 from .structured_logging import emit_event
 from .task_store import TaskStore, task_store_from_env, validate_task_id
 
@@ -32,11 +33,6 @@ def allowed_fixture_ids(environ: dict[str, str] | None = None) -> tuple[str, ...
     if unknown:
         raise RuntimeError("PROOFBID_ALLOWED_FIXTURES contains unknown fixture IDs")
     return requested
-
-
-def project_root() -> Path:
-    configured = os.getenv("PROOFBID_PROJECT_ROOT")
-    return Path(configured).resolve() if configured else Path(__file__).resolve().parents[2]
 
 
 def fixture_workspace(fixture_id: str) -> Path:

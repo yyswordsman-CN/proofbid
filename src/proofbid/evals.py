@@ -11,6 +11,7 @@ from pathlib import Path
 from typing import Any
 
 from .agent_runtime_v2 import run_scripted_agent_pipeline
+from .paths import project_root
 
 
 @dataclass(frozen=True, slots=True)
@@ -133,7 +134,7 @@ def materialize_case(case: EvalCase, source: Path, destination: Path) -> bool:
 def run_eval_suite(output_dir: str | Path) -> dict[str, Any]:
     destination = Path(output_dir).expanduser().resolve()
     destination.mkdir(parents=True, exist_ok=False)
-    source = Path(__file__).resolve().parents[2] / "examples" / "complete_tender"
+    source = project_root() / "examples" / "complete_tender"
     rows: list[dict[str, Any]] = []
     suite_started = time.perf_counter()
     for case in EVAL_CASES:

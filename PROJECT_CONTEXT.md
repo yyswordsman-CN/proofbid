@@ -25,7 +25,7 @@
 
 ## Verification completed in this workspace
 
-- `PYTHONPATH=src .venv/bin/python -m pytest -q`: **65 passed**, 0 failed; three upstream deprecation warnings. V2-specific tests include undeclared tools, out-of-order calls, duplicate completion, input drift, wrong terminal branch, green/blocked/recovery routes, fixture single-variable invariants, stable missing-item reason codes, API state, FunctionTool call IDs, real-receipt rebinding, scripted-marker rejection, fixture allowlisting, and evidence-summary redaction.
+- `PYTHONPATH=src .venv/bin/python -m pytest -q`: **67 passed**, 0 failed; three upstream deprecation warnings. V2-specific tests include undeclared tools, out-of-order calls, duplicate completion, input drift, wrong terminal branch, green/blocked/recovery routes, fixture single-variable invariants, stable missing-item reason codes, API state, FunctionTool call IDs, real-receipt rebinding, scripted-marker rejection, fixture allowlisting, evidence-summary redaction, and installed-CLI asset-root resolution.
 - Three direct v2 routes: green `completed`, authorization case `blocked`, injected render failure recovered exactly once and `completed`; all artifact integrity gates passed.
 - `proofbid eval`: **50/50 passed** in about 22.7 seconds on one local synthetic run. This is not a P95 or production reliability claim.
 - `npm run build`: production React build passed.

@@ -14,6 +14,7 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, ConfigDict
 
 from .cloud_run import execute_cloud_run_job
+from .paths import project_root
 from .pipeline import new_task_id
 from .structured_logging import emit_event
 from .task_store import LocalTaskStore, TaskStore, task_store_from_env
@@ -202,7 +203,7 @@ def create_app(store: TaskStore | None = None) -> FastAPI:
     web_dist = Path(
         os.getenv(
             "PROOFBID_WEB_DIST",
-            str(Path(__file__).resolve().parents[2] / "apps" / "web" / "dist"),
+            str(project_root() / "apps" / "web" / "dist"),
         )
     ).resolve()
     if web_dist.is_dir():
