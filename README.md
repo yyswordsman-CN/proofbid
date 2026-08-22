@@ -24,6 +24,10 @@ The public workbench exposes only two built-in synthetic fixtures:
 
 The legacy `synthetic_tender` fixture remains a separate six-gap pressure/regression case. It is not the public single-variable comparison.
 
+![ProofBid Google Cloud architecture](docs/architecture/proofbid-google-cloud.svg)
+
+The versioned English Mermaid source, SVG, and fixed 1920×1080 PNG are in [`docs/architecture/`](docs/architecture/). Re-render them with `bash infra/render-architecture.sh`, which pins Mermaid CLI 11.16.0.
+
 A third test-only route injects one transient renderer failure and proves that the agent can choose exactly one legal `retry_render` recovery.
 
 ## Safety contract
@@ -168,6 +172,12 @@ proofbid-cloud-evidence \
 ```
 
 The collector fails closed unless the task is terminal, artifact integrity passed, the provider receipt matches its manifest hash, every FunctionTool receipt has a call ID, and the task build version matches the serving revision environment.
+
+Before public release, verify from a fresh clone with Python 3.12, Node 22, Chromium, Docker, and a real local Workbench path:
+
+```bash
+bash infra/verify-clean-clone.sh https://github.com/yyswordsman-CN/proofbid.git
+```
 
 ## Delivery artifacts
 

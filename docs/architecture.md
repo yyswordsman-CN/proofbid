@@ -2,6 +2,8 @@
 
 > 2026-08-22 implementation snapshot. Cloud components are implemented as deployable adapters and assets but have not yet been deployed or verified in this workspace.
 
+Canonical presentation assets: [Mermaid source](architecture/proofbid-google-cloud.mmd), [SVG](architecture/proofbid-google-cloud.svg), and [1920×1080 PNG](architecture/proofbid-google-cloud-1920x1080.png). They are generated with pinned Mermaid CLI 11.16.0 through `infra/render-architecture.sh`.
+
 ## System flow
 
 ```mermaid

@@ -20,9 +20,11 @@
 ## Repository
 
 - [ ] No secret, real customer data, user path, build output or unrelated project asset.
-- [ ] README works from a clean clone.
+- [ ] Public HTTPS clean clone passes `infra/verify-clean-clone.sh` with Python 3.12 and Node 22.
 - [ ] Apache-2.0, notices, IP disclosure and architecture diagram present.
 - [ ] Python tests, frontend build, Playwright and 50-case Eval rerun on freeze commit.
+- [ ] Docker build/container green route and Workbench health/202/poll/download pass from that clone.
+- [ ] English architecture SVG and exact 1920×1080 PNG regenerated with Mermaid CLI 11.16.0.
 - [ ] Git commit/tag and source archive hash saved.
 
 ## Demo and submission

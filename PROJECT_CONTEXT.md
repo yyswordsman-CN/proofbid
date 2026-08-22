@@ -20,6 +20,7 @@
 - Cloud deployment now starts with a green-only fixture allowlist, binds the full commit SHA through `PROOFBID_BUILD_VERSION`, emits structured lifecycle events, and provides separate administrator scripts to open the blocked fixture and inject one renderer failure.
 - `proofbid-cloud-evidence` is implemented to collect and fail-closed reconcile revision/image, execution, task state, provider/usage/FunctionTool evidence, GCS generation/checksums, manifest/ZIP SHA-256 and redacted log timestamps. Raw downloads are ignored; cloud execution remains unverified.
 - The English React/Vite workbench implements the two public cases, task route, tool timeline, evidence/validation/artifact views, readiness, provider/cloud proof, and ZIP download. Arbitrary upload is not exposed.
+- A versioned English Mermaid architecture source now exports to a reviewed SVG and exact 1920×1080 PNG using pinned Mermaid CLI 11.16.0. A clean-clone verifier covers Python 3.12/Node 22 installs, tests, Eval, frontend, Playwright, Workbench API/download, Docker build, and container green route.
 - The programmatic Eval matrix contains and executes 50 synthetic cases: 10 structure, 10 missing evidence, 10 product/pricing, 10 prompt injection, and 10 bounded renderer recovery.
 
 ## Verification completed in this workspace

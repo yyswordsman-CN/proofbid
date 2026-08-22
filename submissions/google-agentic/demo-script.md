@@ -8,7 +8,7 @@
 
 ## 0:25–0:45 — Architecture
 
-Show the architecture diagram.
+Show `docs/architecture/proofbid-google-cloud-1920x1080.png` full-screen.
 
 “The React event reaches a Cloud Run service, which returns 202 and starts a Cloud Run Job. Gemini 3.5 Flash routes Google ADK FunctionTools. Deterministic code owns facts, BOM, rendering, and release. Cloud Storage keeps state, receipts, Trace, and the final ZIP.”
 
@@ -26,11 +26,11 @@ Click `Authorization missing` once.
 
 “The same autonomous workflow reaches a different business terminal state. Project authorization is absent. ProofBid does not infer it from the product catalog and does not fabricate it. The agent selects `finalize_blocked`, then delivers a validated evidence ledger and missing-item package.”
 
-Show the authorization reason code and ZIP download.
+Show `Missing items = 1`, `PROJECT_AUTHORIZATION_MISSING`, both readiness flags `false`, and the still-downloadable validated ZIP.
 
 ## 3:05–3:35 — Agent and cloud proof
 
-Show `agent_run.json`, `tool_receipts.jsonl`, the Cloud Run Job execution, and matching Cloud Logging timestamps.
+Show the redacted `proofbid-cloud-evidence` summary, `agent_run.json`, `tool_receipts.jsonl`, the Cloud Run Job execution, and matching Cloud Logging/GCS timestamps and hashes.
 
 “The receipt records the observed Gemini model version, usage, finish reason, invocation ID, tool choices, retry relationship, and digest chain—without secrets, prompts, or hidden reasoning.”
 

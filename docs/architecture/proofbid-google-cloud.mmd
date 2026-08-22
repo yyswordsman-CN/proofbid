@@ -1,0 +1,37 @@
+flowchart TB
+  classDef event fill:#0B5FFF,color:#FFFFFF,stroke:#0B5FFF,stroke-width:2px
+  classDef cloud fill:#EAF2FF,color:#102A43,stroke:#3973C6,stroke-width:2px
+  classDef agent fill:#F1ECFF,color:#2D1B69,stroke:#7B61C9,stroke-width:2px
+  classDef deterministic fill:#E9F7F0,color:#123B2A,stroke:#27835B,stroke-width:2px
+  classDef storage fill:#FFF5DC,color:#4B3510,stroke:#C98A14,stroke-width:2px
+  classDef gate fill:#FDEDED,color:#5B1A1A,stroke:#C44B4B,stroke-width:2px
+
+  subgraph INTAKE["Event intake and isolated Cloud Run execution"]
+    direction LR
+    EVENT["Synthetic tender event<br/>Complete or one authorization missing"]:::event
+    SERVICE["Cloud Run Service<br/>React Workbench + FastAPI<br/>POST 202 · poll · download"]:::cloud
+    JOB["Cloud Run Job<br/>One task · one execution<br/>Commit-bound image"]:::cloud
+    ROUTE["Job execution ID<br/>Task + fixture override"]:::cloud
+    EVENT -->|"1. POST task"| SERVICE -->|"2. Start Job"| JOB --> ROUTE
+  end
+
+  subgraph MODEL["Gemini + Google ADK + bounded execution"]
+    direction LR
+    GEMINI["Gemini 3.5 Flash<br/>Vertex AI ADC"]:::agent
+    ADK["Google ADK routing<br/>Invocation + usage receipt"]:::agent
+    TOOLS["Bounded FunctionTools<br/>Server-bound inputs<br/>Function call IDs"]:::agent
+    CORE["Domain core<br/>Evidence ledger · BOM<br/>Stable missing-item codes"]:::deterministic
+    GEMINI --> ADK --> TOOLS -->|"Legal next call"| CORE
+  end
+
+  subgraph EVIDENCE["Deterministic release and auditable proof"]
+    direction LR
+    VALIDATORS["Deterministic validators<br/>Facts · readiness · hashes<br/>Cross-artifact consistency"]:::gate
+    RENDER["Controlled renderers<br/>Word · Excel · JSON · ZIP"]:::deterministic
+    GCS[("Cloud Storage<br/>Task state · provider receipts<br/>Manifest · validated artifacts")]:::storage
+    LOGS[("Cloud Logging<br/>Lifecycle timestamps<br/>Provider completion")]:::storage
+    VALIDATORS -->|"Ready or blocked"| RENDER -->|"Artifacts + hashes"| GCS --> LOGS
+  end
+
+  INTAKE -->|"3. Gemini routing"| MODEL
+  MODEL -->|"4. Deterministic validation"| EVIDENCE
