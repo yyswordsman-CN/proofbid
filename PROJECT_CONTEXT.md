@@ -42,7 +42,7 @@
 - No authorized Gemini credential or Vertex AI ADC project is configured in this workspace. `google-agent-run` code and FunctionTools are locally validated, but no real `gemini-3.5-flash` provider event, usage, finish reason, or invocation ID has been captured.
 - No isolated Google Cloud project, billing/Credits result, Artifact Registry image, Cloud Run Service/Job, GCS bucket, Cloud Logging evidence, revision digest, execution ID, or public `.run.app` URL has been created or verified.
 - No green/blocked case has been run three times in Google Cloud; no cloud token/cost sample exists.
-- No public GitHub repository, commit/tag, push, video, Devpost submission, or external receipt exists.
+- Local commits exist and preserve the baseline/fix evidence chain. No public GitHub repository, remote push, submission tag, video, Devpost submission, or external success receipt exists.
 - Public-repository preflight passed for secrets, absolute user paths, tracked size, failure-injection exposure, license, IP disclosure and notices. GitHub publication remains blocked because the active `gh` token is invalid and the owner did not complete the device authorization before it expired.
 
 ## Locked scope
@@ -54,7 +54,7 @@
 
 ## Unique NEXT
 
-After the owner authorizes and configures an isolated Google Cloud competition project, run `infra/cloud-shell-deploy.sh`, then capture one real `complete_tender` Job end-to-end. Success requires all of the following in the same evidence chain:
+After the owner completes Devpost/GitHub authentication and makes a Billing Account available, configure the isolated Google Cloud competition project and Vertex ADC. Before any deployment, run local `google-agent-run` for `complete_tender` and `blocked_missing_authorization`; both must pass the real-provider/FunctionTool evidence gate with no scripted marker. Only then run `infra/cloud-shell-deploy.sh` and capture one real `complete_tender` Job end-to-end. Success requires all of the following in the same evidence chain:
 
 1. public Service returns 202 and records a real Cloud execution ID;
 2. Job reaches `completed` without a follow-up prompt;
