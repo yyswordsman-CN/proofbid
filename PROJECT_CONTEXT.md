@@ -34,6 +34,7 @@
 - `bash -n infra/cloud-shell-deploy.sh`: passed.
 - `docker build -t proofbid:local .`: multi-stage image built successfully after transient registry retries.
 - The non-root built image ran the complete tender through Agent v2 and returned `completed`, both readiness flags `true`, 10 tool calls, and artifact integrity passed.
+- A fresh local Git clone of commit `97da579` passed Python 3.12.13 dependency installation, 67 tests, 50/50 Eval, Node 22.22.3 install/build, 6/6 Playwright, Workbench health/202/poll/download, Docker build, and a non-root container green route. The first attempt exposed and led to fixing installed-CLI asset-root resolution. Public HTTPS clone verification remains pending.
 - Repository scan found no populated API keys/private keys, user name, or absolute local project path.
 
 ## Evidence not yet obtained

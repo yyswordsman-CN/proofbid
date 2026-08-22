@@ -1,0 +1,48 @@
+{
+  "schema_version": "proofbid.clean-clone-evidence/v1",
+  "observed_at": "2026-08-22",
+  "source": {
+    "kind": "local_git_clone",
+    "commit": "97da57903ade4a9bb47ada42c0ff52f7a6bff0e8",
+    "public_https_verified": false
+  },
+  "environment": {
+    "python": "3.12.13",
+    "node": "22.22.3",
+    "docker_platform": "linux/arm64"
+  },
+  "checks": {
+    "python_tests": {"passed": 67, "failed": 0},
+    "eval": {"passed": 50, "case_count": 50, "duration_ms": 20851.328},
+    "frontend_build": {"passed": true, "vite_duration_ms": 693},
+    "playwright": {"passed": 6, "failed": 0, "duration_seconds": 6.2},
+    "workbench": {
+      "health": "ok",
+      "post_status": 202,
+      "task_id": "task-4dd6d4ff9ff54763bd15",
+      "terminal_status": "completed",
+      "zip_download_valid": true
+    },
+    "docker": {
+      "build_passed": true,
+      "image_tag": "proofbid:clean-97da57903ade",
+      "image_id": "sha256:3f8efd347274c6ec3f423bce132f59c58fb5b067fc07386cb6151bf11cb49be3",
+      "container_task_id": "task-691241f1bdf047afb83f",
+      "container_status": "completed",
+      "artifact_integrity_passed": true
+    },
+    "clean_worktree_after_verification": true
+  },
+  "architecture": {
+    "mermaid_cli": "11.16.0",
+    "png_dimensions": "1920x1080",
+    "source_sha256": "8f669ed3c13c2430d72f642043b4382583778a61eb7a629d66a75168cfdfeb98",
+    "svg_sha256": "4745ee80c26ad0fe5f2a9aa4d4e1bf35cd3278d5913710bb37ee1e74c1ba930b",
+    "png_sha256": "c5122dbd658526cb5051229c2292d7dce22a3639f8392cd5521d167cd817c2bc"
+  },
+  "prior_failed_attempt": {
+    "commit": "3419bba",
+    "reason_code": "INSTALLED_CLI_ASSET_ROOT_INVALID",
+    "fixed_by_commit": "97da57903ade4a9bb47ada42c0ff52f7a6bff0e8"
+  }
+}
