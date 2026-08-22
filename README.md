@@ -20,7 +20,9 @@ React event
 The public workbench exposes only two built-in synthetic fixtures:
 
 - `complete_tender`: all required evidence exists; both readiness flags are `true`.
-- `blocked_missing_authorization`: project authorization is absent; both readiness flags are `false`, no fact is fabricated, and a missing-item package is still delivered.
+- `blocked_missing_authorization`: its tender and catalog are byte-identical to the green fixture and its bidder profile removes only the project-specific manufacturer authorization. The result has exactly one missing item, `PROJECT_AUTHORIZATION_MISSING`; both readiness flags are `false`, and a complete validated ZIP is still delivered.
+
+The legacy `synthetic_tender` fixture remains a separate six-gap pressure/regression case. It is not the public single-variable comparison.
 
 A third test-only route injects one transient renderer failure and proves that the agent can choose exactly one legal `retry_render` recovery.
 
@@ -122,6 +124,8 @@ cd apps/web
 npm run build
 npm run test:e2e
 ```
+
+The latest post-change local run passed 58 Python tests and 6 Playwright desktop/mobile checks. Treat these counts as a dated snapshot, not a permanently fixed target.
 
 The Playwright suite covers desktop and mobile layouts, both public fixture entry points, the complete event-to-download route, and horizontal overflow. Python tests cover deterministic regression, green/blocked/recovery agent routes, fail-closed contracts, API 202/poll/download gates, manifests, ZIPs, Word, and Excel consistency.
 

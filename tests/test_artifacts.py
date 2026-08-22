@@ -138,6 +138,7 @@ def _blocked_bundle() -> AnalysisBundle:
     missing = MissingItem(
         id="missing-001",
         requirement_id=requirement.req_id,
+        reason_code="PROJECT_AUTHORIZATION_MISSING",
         description="The authorization document was not supplied.",
         severity=Severity.BLOCKER,
         blocks_completion=True,

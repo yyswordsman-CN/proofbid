@@ -73,8 +73,16 @@ def test_agent_v2_blocked_route_delivers_missing_item_package(tmp_path: Path) ->
     assert result["status"] == "blocked"
     assert result["ready_for_human_review"] is False
     assert result["ready_for_submission"] is False
-    assert result["blocking_reason_codes"]
+    assert "PROJECT_AUTHORIZATION_MISSING" in result["blocking_reason_codes"]
+    assert not any(
+        code.startswith("BLOCKING_MISSING_ITEM:")
+        for code in result["blocking_reason_codes"]
+    )
     assert result["artifact_integrity_passed"] is True
+
+    analysis = json.loads((output / "result.json").read_text(encoding="utf-8"))["analysis"]
+    assert len(analysis["missing_items"]) == 1
+    assert analysis["missing_items"][0]["reason_code"] == "PROJECT_AUTHORIZATION_MISSING"
 
 
 def test_agent_v2_uses_one_bounded_renderer_recovery(tmp_path: Path) -> None:

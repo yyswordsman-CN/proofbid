@@ -81,6 +81,17 @@ def _stable_id(prefix: str, *parts: str) -> str:
     return f"{prefix}-{digest}"
 
 
+def _missing_reason_code(requirement: Requirement) -> str:
+    normalized = requirement.text.casefold()
+    if "授权书" in normalized and ("本项目" in normalized or "制造商" in normalized):
+        return "PROJECT_AUTHORIZATION_MISSING"
+    if requirement.category is RequirementCategory.PRICING:
+        return "PRICING_EVIDENCE_MISSING"
+    if requirement.mandatory:
+        return "MANDATORY_EVIDENCE_MISSING"
+    return "EVIDENCE_REVIEW_REQUIRED"
+
+
 def _verified_text(document: SourceDocument, expected_type: DocumentType) -> str:
     if document.document_type is not expected_type:
         raise ValueError(
@@ -936,6 +947,7 @@ def build_analysis(
                 MissingItem(
                     id=_stable_id("missing", task_id, requirement.req_id),
                     requirement_id=requirement.req_id,
+                    reason_code=_missing_reason_code(requirement),
                     description=f"需人工补充或确认：{requirement.text}",
                     severity=Severity.BLOCKER if requirement.mandatory else Severity.WARNING,
                     blocks_completion=requirement.mandatory,

@@ -16,14 +16,14 @@
 
 ## 2. 基准夹具与人工 Oracle
 
-夹具目录：`examples/complete_tender/` 与 `examples/blocked_missing_authorization/`。全部内容为合成数据；旧 `examples/synthetic_tender/` 保留为 v1 回归夹具。
+夹具目录：`examples/complete_tender/` 与 `examples/blocked_missing_authorization/`。全部内容为合成数据；两者的 `tender.md`、`catalog.csv` 完全一致，主体资料除删除“本项目制造商授权书”外完全一致。旧 `examples/synthetic_tender/` 保留为六缺件压力与 v1 回归夹具。
 
 | Oracle 项 | 预期 | 验证意图 |
 |---|---|---|
 | 编号要求 | 招标文本含 12 条编号要求 | 检查漏抽、重复和定位 |
 | 营业执照 | 主体资料中存在有效合成证明 | 可以标记为有证据满足 |
 | ISO 9001 | 主体资料中存在有效合成证明 | 可以标记为有证据满足 |
-| 制造商项目授权 | 主体资料中缺失 | 必须进入缺件，不能由目录 `authorized=true` 冒充项目授权书 |
+| 制造商项目授权 | 绿色夹具存在；阻断夹具仅删除这一份证据 | 阻断结果必须且只能产生 1 个缺件，稳定业务码为 `PROJECT_AUTHORIZATION_MISSING`；不能由目录 `authorized=true` 冒充项目授权书 |
 | 显示设备 | 2 台，至少 98 英寸、3840×2160、3 年质保 | `DISPLAY-98` 满足硬约束；`DISPLAY-86` 不满足尺寸 |
 | 控制终端 | 1 台，至少 16 GB / 512 GB、3 年质保 | `CONTROL-16` 满足；`CONTROL-8` 不满足硬约束 |
 | 目录设备小计 | 2 × 128000 + 1 × 18000 = CNY 274000 | 可与 CNY 500000 上限比较，但不能称为含运输、安装、培训和税费的最终报价 |
@@ -56,9 +56,9 @@ python -m pytest
 
 当前验证快照（2026-08-22，Python 3.14.6）：
 
-- `PYTHONPATH=src .venv/bin/python -m pytest -q`：`55 passed, 0 failed`，另有 3 条上游弃用警告；
+- `PYTHONPATH=src .venv/bin/python -m pytest -q`：单授权改造后 `58 passed, 0 failed`，另有 3 条上游弃用警告；
 - `npm run build`：React/TypeScript/Vite 生产构建通过；
-- `npm run test:e2e`：Chromium 桌面与移动端 `4 passed`；
+- `npm run test:e2e`：Chromium 桌面与移动端 `6 passed`，包含单授权缺失 UI、业务码与 ZIP 下载；
 - `proofbid eval --output <new-dir>`：合成 Eval `50/50 passed`，约 22.7 秒；
 - `docker build -t proofbid:local .`：完整多阶段镜像构建通过；镜像内绿色 Agent v2 运行通过。
 

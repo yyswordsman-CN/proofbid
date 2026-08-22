@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 from dataclasses import asdict, dataclass, field
 from enum import Enum
 from pathlib import Path
@@ -173,9 +174,16 @@ class ComplianceMatch:
 class MissingItem:
     id: str
     requirement_id: str
+    reason_code: str
     description: str
     severity: Severity
     blocks_completion: bool
+
+    def __post_init__(self) -> None:
+        if not self.reason_code or not self.reason_code.strip():
+            raise ValueError("Missing items require a stable reason_code")
+        if not re.fullmatch(r"[A-Z][A-Z0-9_]*", self.reason_code):
+            raise ValueError("Missing-item reason_code must be an uppercase business code")
 
 
 @dataclass(frozen=True, slots=True)

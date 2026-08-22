@@ -27,7 +27,7 @@ type TaskState = {
     requirement_count: number;
     evidence_count: number;
     matched_count: number;
-    missing_items: Array<{ description?: string; reason?: string }>;
+    missing_items: Array<{ description?: string; reason_code?: string }>;
   };
   validation_summary?: {
     passed_count: number;
@@ -234,6 +234,12 @@ function App() {
                 <strong>{modelLabel}</strong>
                 <small>{task.cloud_execution_id || "Local execution — cloud ID pending deployment"}</small>
               </div>
+              {!!task.blocking_reason_codes?.length && (
+                <div className="blocking-proof">
+                  <span>Blocking reason</span>
+                  {task.blocking_reason_codes.map((code) => <code key={code}>{code}</code>)}
+                </div>
+              )}
               {task.bundle_url && (
                 <a className="download" href={task.bundle_url}>Download validated ZIP <span aria-hidden="true">↓</span></a>
               )}

@@ -1,12 +1,28 @@
 {
   "synthetic": true,
-  "bidder_name": "演示智造有限公司",
+  "bidder_name": "ProofBid Synthetic Systems Ltd.",
   "documents": [
     {"name": "营业执照", "status": "valid", "valid_until": "2028-12-31", "source": "synthetic://bidder/license"},
-    {"name": "ISO 9001 质量管理体系认证", "status": "valid", "valid_until": "2027-06-30", "source": "synthetic://bidder/iso9001"}
+    {"name": "ISO 9001 质量管理体系认证", "status": "valid", "valid_until": "2027-06-30", "source": "synthetic://bidder/iso9001"},
+    {"name": "安装计划", "status": "valid", "source": "synthetic://bidder/installation-plan"},
+    {"name": "测试记录", "status": "valid", "source": "synthetic://bidder/test-record"},
+    {"name": "商务文件", "status": "valid", "source": "synthetic://package/commercial"},
+    {"name": "技术文件", "status": "valid", "source": "synthetic://package/technical"},
+    {"name": "报价文件", "status": "valid", "source": "synthetic://package/pricing"},
+    {"name": "偏离表", "status": "valid", "source": "synthetic://package/deviation"},
+    {"name": "资格证明材料", "status": "valid", "source": "synthetic://package/qualification"}
   ],
   "capabilities": [
     {"name": "交付周期", "value": "20 个自然日"},
     {"name": "安装与验收", "value": "支持"}
-  ]
+  ],
+  "pricing": {
+    "quote_basis": "final",
+    "is_provisional": false,
+    "included_costs": ["运输", "安装", "培训", "税费"]
+  },
+  "submission_control": {
+    "deadline": "2026-09-30 17:00",
+    "deadline_acknowledged": true
+  }
 }

@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://proofbid.local/contracts/missing-item.v1.schema.json",
+  "title": "ProofBid MissingItem v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "requirement_id",
+    "reason_code",
+    "description",
+    "severity",
+    "blocks_completion"
+  ],
+  "properties": {
+    "id": {"type": "string", "minLength": 1},
+    "requirement_id": {"type": "string", "minLength": 1},
+    "reason_code": {"type": "string", "pattern": "^[A-Z][A-Z0-9_]*$"},
+    "description": {"type": "string", "minLength": 1},
+    "severity": {"enum": ["info", "warning", "error", "blocker"]},
+    "blocks_completion": {"type": "boolean"}
+  }
+}

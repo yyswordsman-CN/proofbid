@@ -42,6 +42,23 @@ def test_task_api_rejects_unknown_fixture(tmp_path: Path) -> None:
     assert response.status_code == 422
 
 
+def test_task_api_exposes_single_project_authorization_blocker(tmp_path: Path) -> None:
+    with _client(tmp_path) as client:
+        created = client.post(
+            "/api/v1/tasks",
+            json={"fixture_id": "blocked_missing_authorization"},
+        )
+        assert created.status_code == 202
+        task_id = created.json()["task_id"]
+        state = client.get(f"/api/v1/tasks/{task_id}").json()
+
+    assert state["status"] == "blocked"
+    assert state["ready_for_human_review"] is False
+    assert state["ready_for_submission"] is False
+    assert len(state["evidence_summary"]["missing_items"]) == 1
+    assert "PROJECT_AUTHORIZATION_MISSING" in state["blocking_reason_codes"]
+
+
 def test_bundle_gate_rejects_nonterminal_task(tmp_path: Path) -> None:
     store = LocalTaskStore(tmp_path / "tasks")
     task_id = "task-1234567890abcdef1234"

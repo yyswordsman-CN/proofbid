@@ -18,6 +18,7 @@ from proofbid.planning import (  # noqa: E402
     REQUIRED_TOOL_DEPENDENCIES,
     build_task_spec,
 )
+from proofbid.contracts import MissingItem, Severity, to_primitive  # noqa: E402
 
 
 PROJECT_ROOT = Path(__file__).parents[1]
@@ -84,3 +85,15 @@ def test_planning_contracts_match_versioned_json_schemas() -> None:
         _load_schema("provider-receipt.v1.schema.json"),
         format_checker=jsonschema.FormatChecker(),
     )
+
+
+def test_missing_item_requires_a_stable_business_reason_code() -> None:
+    item = MissingItem(
+        id="missing-auth",
+        requirement_id="req-auth",
+        reason_code="PROJECT_AUTHORIZATION_MISSING",
+        description="Project authorization evidence is absent.",
+        severity=Severity.BLOCKER,
+        blocks_completion=True,
+    )
+    jsonschema.validate(to_primitive(item), _load_schema("missing-item.v1.schema.json"))

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from pathlib import Path
 
 import pytest
@@ -19,6 +20,10 @@ from proofbid import (
 
 
 FIXTURE = Path(__file__).parents[1] / "examples" / "synthetic_tender"
+COMPLETE_FIXTURE = Path(__file__).parents[1] / "examples" / "complete_tender"
+AUTHORIZATION_BLOCKED_FIXTURE = (
+    Path(__file__).parents[1] / "examples" / "blocked_missing_authorization"
+)
 
 
 def _bundle():
@@ -31,6 +36,25 @@ def _bundle():
     profile = load_bidder_profile(by_name["bidder_profile.json"])
     catalog = load_catalog(by_name["catalog.csv"])
     return extraction, build_analysis("oracle", extraction, profile, catalog)
+
+
+def test_authorization_blocked_fixture_differs_only_by_project_authorization() -> None:
+    for name in ("tender.md", "catalog.csv"):
+        assert (COMPLETE_FIXTURE / name).read_bytes() == (
+            AUTHORIZATION_BLOCKED_FIXTURE / name
+        ).read_bytes()
+
+    complete = json.loads((COMPLETE_FIXTURE / "bidder_profile.json").read_text(encoding="utf-8"))
+    blocked = json.loads(
+        (AUTHORIZATION_BLOCKED_FIXTURE / "bidder_profile.json").read_text(encoding="utf-8")
+    )
+    authorization = next(
+        document
+        for document in complete["documents"]
+        if document["source"] == "synthetic://bidder/project-authorization"
+    )
+    complete["documents"].remove(authorization)
+    assert blocked == complete
 
 
 def test_extraction_is_evidence_bound_and_section_aware() -> None:

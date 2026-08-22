@@ -82,7 +82,7 @@ No artifact contains a credential, complete prompt, hidden thought, or full sour
 }
 ```
 
-`complete_tender` must set both readiness flags to `true`; the missing-authorization fixture must set both to `false`. A blocked task still returns a validated ZIP containing the evidence ledger and missing-item list. UI wording is “Preparation package ready for controlled submission”; it never says that submission occurred.
+`complete_tender` must set both readiness flags to `true`; the missing-authorization fixture must set both to `false`, contain exactly one missing item, and expose `PROJECT_AUTHORIZATION_MISSING` rather than a task-specific random ID. A blocked task still returns a validated ZIP containing the evidence ledger and missing-item list. UI wording is “Preparation package ready for controlled submission”; it never says that submission occurred.
 
 ## Service and storage contracts
 

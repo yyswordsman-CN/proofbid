@@ -20,3 +20,14 @@ test("green event reaches a reviewable downloadable terminal package", async ({ 
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth);
   expect(overflow).toBe(false);
 });
+
+test("blocked event isolates one project authorization gap", async ({ page }) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: /Run blocked case/ }).click();
+  await expect(page.getByText("Package blocked with evidence gaps")).toBeVisible({
+    timeout: 20_000
+  });
+  await expect(page.getByText("PROJECT_AUTHORIZATION_MISSING")).toBeVisible();
+  await expect(page.getByText("Missing items").locator("..").getByText("1", { exact: true })).toBeVisible();
+  await expect(page.getByRole("link", { name: /Download validated ZIP/ })).toBeVisible();
+});

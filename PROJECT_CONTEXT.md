@@ -4,12 +4,13 @@
 
 ## Current implementation
 
-- The directory is now an independent Git repository on unborn branch `main`; no commit, remote, push, tag, or public repository exists yet.
+- The independent Git repository now has two evidence-preserving baseline commits: `699a6f5` records the pre-fix code baseline and `7a4c744` records its local verification. No remote, push, tag, or public repository exists yet.
 - The project is Apache-2.0 licensed with `THIRD_PARTY_NOTICES.md` and an updated competition/IP snapshot.
 - The original deterministic v1 vertical slice remains intact for regression.
 - Two public-safe synthetic fixtures exist:
   - `complete_tender`: 12/12 requirements matched, 63 evidence refs, 2 BOM lines, CNY 274000 catalog subtotal, zero missing items, both readiness flags `true`.
-  - `blocked_missing_authorization`: missing project authorization remains a truthful blocker; both readiness flags `false`; a validated missing-item ZIP is still delivered.
+  - `blocked_missing_authorization`: identical tender/catalog and otherwise identical bidder evidence to the green case, with only the project authorization removed; exactly one `PROJECT_AUTHORIZATION_MISSING` item, both readiness flags `false`, and a validated ZIP still delivered.
+- `MissingItem.reason_code` is a required versioned contract field. Blocking readiness uses stable business codes rather than task-specific missing-item IDs. The old `synthetic_tender` remains the six-gap pressure/regression fixture.
 - `ReadinessDecision` now binds `ready_for_human_review`, `ready_for_submission`, `submission_executed=false`, `high_risk_actions_locked=true`, and blocking reason codes across result and run summaries.
 - Agent v2 is implemented as a server-bound state machine with real Google ADK `FunctionTool` registration. Gemini may choose bounded tool order, the deterministic terminal branch, and one legal renderer retry; it cannot supply paths, facts, prices, SQL, shell, URLs, or submission actions.
 - V2 deliveries include `agent_run.json` and `tool_receipts.jsonl` with model/usage/invocation fields, tool/result digest chain, reason codes, durations, and retry relation. They do not contain secrets, source body, full prompt, or hidden reasoning.
@@ -20,11 +21,11 @@
 
 ## Verification completed in this workspace
 
-- `PYTHONPATH=src .venv/bin/python -m pytest -q`: **55 passed**, 0 failed; three upstream deprecation warnings. V2-specific tests include undeclared tools, out-of-order calls, duplicate completion, input drift, wrong terminal branch, green/blocked/recovery routes, and artifact receipts.
+- `PYTHONPATH=src .venv/bin/python -m pytest -q`: **58 passed**, 0 failed; three upstream deprecation warnings. V2-specific tests include undeclared tools, out-of-order calls, duplicate completion, input drift, wrong terminal branch, green/blocked/recovery routes, fixture single-variable invariants, stable missing-item reason codes, API state, and artifact receipts.
 - Three direct v2 routes: green `completed`, authorization case `blocked`, injected render failure recovered exactly once and `completed`; all artifact integrity gates passed.
 - `proofbid eval`: **50/50 passed** in about 22.7 seconds on one local synthetic run. This is not a P95 or production reliability claim.
 - `npm run build`: production React build passed.
-- Playwright real Chromium at 1440×1000 and 390×844: **4/4 passed**; full workbench screenshots were visually inspected with no observed horizontal overflow or clipping.
+- Playwright real Chromium at 1440×1000 and 390×844: **6/6 passed** after the single-authorization UI change, including visible missing count, stable reason code and blocked ZIP download.
 - Fresh green and blocked Word/Excel files were reopened with LibreOffice and exported to PDF. Both Word reports rendered as two landscape pages; the green/blocked first pages and workbook summaries were visually inspected. The green report wording was corrected to reflect evidenced quote inclusions, and workbook print settings reduced horizontal pagination.
 - `bash -n infra/cloud-shell-deploy.sh`: passed.
 - `docker build -t proofbid:local .`: multi-stage image built successfully after transient registry retries.

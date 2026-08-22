@@ -1,6 +1,6 @@
-# 智慧会议室设备采购项目招标文件（合成）
+# Smart Meeting Room Equipment Procurement Tender (Synthetic)
 
-> 本文件仅用于 ProofBid 比赛开发与测试，不对应任何真实招标活动。
+> This file is synthetic and exists only for ProofBid development and judging.
 
 ## 一、资格要求
 

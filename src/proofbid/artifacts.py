@@ -1329,8 +1329,8 @@ def render_bundle(
     ]
     for item in _records(bundle, "missing_items", "missing"):
         if bool(_field(item, "blocks_completion", "blocking", default=False)):
-            item_id = _identifier(item, "missing_item_id", "id") or "unknown"
-            blocking_reason_codes.append(f"BLOCKING_MISSING_ITEM:{item_id}")
+            reason_code = str(_field(item, "reason_code", default="")).strip()
+            blocking_reason_codes.append(reason_code or "MISSING_ITEM_REASON_UNSPECIFIED")
     blocking_reason_codes = list(dict.fromkeys(blocking_reason_codes))
     package_ready = not blocking_reason_codes
     readiness = {
