@@ -34,6 +34,7 @@ service = [
 
 [project.scripts]
 proofbid = "proofbid.cli:main"
+proofbid-cloud-evidence = "proofbid.cloud_evidence:main"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/proofbid"]

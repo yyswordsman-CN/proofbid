@@ -10,6 +10,7 @@ from pathlib import Path
 from typing import Any
 
 from .agent_runtime_v2 import run_scripted_agent_pipeline
+from .structured_logging import emit_event
 from .task_store import TaskStore, task_store_from_env, validate_task_id
 
 
@@ -19,12 +20,28 @@ FIXTURE_WORKSPACES = {
 }
 
 
+def allowed_fixture_ids(environ: dict[str, str] | None = None) -> tuple[str, ...]:
+    env = os.environ if environ is None else environ
+    raw = env.get("PROOFBID_ALLOWED_FIXTURES")
+    if raw is None:
+        return tuple(FIXTURE_WORKSPACES)
+    requested = tuple(dict.fromkeys(item.strip() for item in raw.split(",") if item.strip()))
+    if not requested:
+        raise RuntimeError("PROOFBID_ALLOWED_FIXTURES must not be empty")
+    unknown = set(requested) - set(FIXTURE_WORKSPACES)
+    if unknown:
+        raise RuntimeError("PROOFBID_ALLOWED_FIXTURES contains unknown fixture IDs")
+    return requested
+
+
 def project_root() -> Path:
     configured = os.getenv("PROOFBID_PROJECT_ROOT")
     return Path(configured).resolve() if configured else Path(__file__).resolve().parents[2]
 
 
 def fixture_workspace(fixture_id: str) -> Path:
+    if fixture_id not in allowed_fixture_ids():
+        raise ValueError("Fixture is not enabled for this deployment")
     relative = FIXTURE_WORKSPACES.get(fixture_id)
     if relative is None:
         raise ValueError("Unknown fixture id")
@@ -57,6 +74,12 @@ def execute_task(
         "updated_at": _now(),
     }
     store.write_state(task_id, running)
+    emit_event(
+        "running",
+        task_id=task_id,
+        fixture_id=fixture_id,
+        build_version=os.getenv("PROOFBID_BUILD_VERSION", "dev"),
+    )
     try:
         with tempfile.TemporaryDirectory(prefix="proofbid-task-") as temp:
             output = Path(temp) / "delivery"
@@ -90,6 +113,16 @@ def execute_task(
                 for key, value in result.items()
                 if key not in {"artifacts"}
             }
+            provider = public_result.get("provider") or {}
+            emit_event(
+                "provider_completed",
+                task_id=task_id,
+                provider=provider.get("provider"),
+                model_version=provider.get("model_version"),
+                invocation_id=provider.get("invocation_id"),
+                total_tokens=provider.get("total_tokens"),
+                duration_ms=provider.get("duration_ms"),
+            )
             terminal = {
                 **running,
                 **public_result,
@@ -105,6 +138,7 @@ def execute_task(
                             "status",
                             "reason_code",
                             "duration_ms",
+                            "function_call_id",
                             "retry_of",
                         )
                     }
@@ -136,6 +170,13 @@ def execute_task(
                 "updated_at": _now(),
             }
             store.write_state(task_id, terminal)
+            emit_event(
+                "delivery_ready",
+                task_id=task_id,
+                status=terminal["status"],
+                artifact_integrity_passed=terminal.get("artifact_integrity_passed"),
+                missing_item_count=terminal.get("missing_item_count"),
+            )
             return terminal
     except Exception as exc:
         failed = {
@@ -148,6 +189,12 @@ def execute_task(
             "updated_at": _now(),
         }
         store.write_state(task_id, failed)
+        emit_event(
+            "delivery_failed",
+            task_id=task_id,
+            reason_code=failed["reason_code"],
+            error_type=failed["error_type"],
+        )
         raise
 
 
@@ -168,4 +215,10 @@ if __name__ == "__main__":
     raise SystemExit(main())
 
 
-__all__ = ["FIXTURE_WORKSPACES", "execute_task", "fixture_workspace", "main"]
+__all__ = [
+    "FIXTURE_WORKSPACES",
+    "allowed_fixture_ids",
+    "execute_task",
+    "fixture_workspace",
+    "main",
+]

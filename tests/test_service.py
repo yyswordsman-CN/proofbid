@@ -83,3 +83,18 @@ def test_health_does_not_run_agent(tmp_path: Path) -> None:
     assert response.status_code == 200
     assert response.json()["status"] == "ok"
     assert list((tmp_path / "tasks").iterdir()) == []
+
+
+def test_fixture_allowlist_can_hold_public_api_to_green_only(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    monkeypatch.setenv("PROOFBID_ALLOWED_FIXTURES", "complete_tender")
+    with _client(tmp_path) as client:
+        health = client.get("/healthz")
+        blocked = client.post(
+            "/api/v1/tasks",
+            json={"fixture_id": "blocked_missing_authorization"},
+        )
+    assert health.json()["allowed_fixtures"] == ["complete_tender"]
+    assert blocked.status_code == 422

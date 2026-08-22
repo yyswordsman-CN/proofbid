@@ -91,7 +91,7 @@ No artifact contains a credential, complete prompt, hidden thought, or full sour
 - `POST /api/v1/tasks` accepts one fixture ID and returns `202` plus a status URL.
 - `GET /api/v1/tasks/{task_id}` returns accepted/queued/running/completed/blocked/failed plus minimal review summaries.
 - `GET /api/v1/tasks/{task_id}/bundle` returns only completed/blocked deliveries whose artifact integrity passed.
-- `GET /healthz` reports build health only and cannot trigger Gemini.
+- `GET /healthz` reports build health, commit-bound build version, and enabled fixtures only; it cannot trigger Gemini.
 - GCS object prefix: `tasks/{task_id}/state.json` and `tasks/{task_id}/artifacts/{basename}`.
 - Task IDs are restricted to `task-[0-9a-f]{20}` and artifact access collapses to fixed basenames.
 
@@ -103,7 +103,11 @@ The bucket lifecycle deletes `tasks/` objects after seven days. A curated eviden
 - Job: one task, parallelism one, zero platform retries, ten-minute timeout, dedicated job account.
 - Vertex AI: ADC, `gemini-3.5-flash`, location `global`; no API key stored.
 - Storage: uniform bucket access, seven-day lifecycle.
-- Logging: normal Cloud Run stdout/request logs; application Trace remains packaged JSONL.
+- Logging: privacy-minimized JSON stdout events for `accepted`, `job_queued`, `running`, `provider_completed`, `delivery_ready`, and `delivery_failed`; application Trace remains packaged JSONL.
+
+The initial deployment sets `PROOFBID_ALLOWED_FIXTURES=complete_tender` on both Service and Job. A separate administrator script opens `blocked_missing_authorization` only after green reconciliation. Renderer failure injection is a Job-only environment override and has no public API/UI control. `PROOFBID_BUILD_VERSION` carries the full commit SHA into the image-backed revision and every task state.
+
+`proofbid-cloud-evidence` collects Service URL/revision/image, Job execution, task state, ProviderReceipt, usage and FunctionTool IDs, GCS generation/checksums, manifest/ZIP SHA-256 and redacted log timestamps. Raw downloads are kept in the ignored `.proofbid/evidence-raw/` directory; only the redacted JSON/Markdown summary is intended for version control.
 
 The repository intentionally does not add Firestore, Pub/Sub, PDF/OCR, arbitrary upload, multi-agent orchestration, signing, or submission.
 

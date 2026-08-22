@@ -15,8 +15,9 @@ from pydantic import BaseModel, ConfigDict
 
 from .cloud_run import execute_cloud_run_job
 from .pipeline import new_task_id
+from .structured_logging import emit_event
 from .task_store import LocalTaskStore, TaskStore, task_store_from_env
-from .task_worker import FIXTURE_WORKSPACES, execute_task
+from .task_worker import allowed_fixture_ids, execute_task
 
 
 BUILD_VERSION = os.getenv("PROOFBID_BUILD_VERSION", "dev")
@@ -71,6 +72,7 @@ def create_app(store: TaskStore | None = None) -> FastAPI:
     worker_lock = threading.Lock()
     quota = DemoQuota(maximum=int(os.getenv("PROOFBID_DAILY_DEMO_QUOTA", "40")))
     cloud_backend = os.getenv("PROOFBID_STORAGE_BACKEND", "local").casefold() == "gcs"
+    enabled_fixtures = allowed_fixture_ids()
 
     def run_local_task(task_id: str, fixture_id: str) -> None:
         with worker_lock:
@@ -82,8 +84,12 @@ def create_app(store: TaskStore | None = None) -> FastAPI:
             )
 
     @app.get("/healthz", name="healthz")
-    def healthz() -> dict[str, str]:
-        return {"status": "ok", "build_version": BUILD_VERSION}
+    def healthz() -> dict[str, Any]:
+        return {
+            "status": "ok",
+            "build_version": BUILD_VERSION,
+            "allowed_fixtures": list(enabled_fixtures),
+        }
 
     @app.post("/api/v1/tasks", status_code=status.HTTP_202_ACCEPTED, name="create_task")
     def create_task(
@@ -92,8 +98,8 @@ def create_app(store: TaskStore | None = None) -> FastAPI:
         background_tasks: BackgroundTasks,
     ) -> dict[str, Any]:
         fixture_id = request_body.fixture_id
-        if fixture_id not in FIXTURE_WORKSPACES:
-            raise HTTPException(status_code=422, detail="Unknown fixture_id")
+        if fixture_id not in enabled_fixtures:
+            raise HTTPException(status_code=422, detail="Unknown or disabled fixture_id")
         if not quota.consume():
             raise HTTPException(status_code=429, detail="Daily demo quota exceeded")
         task_id = new_task_id()
@@ -109,6 +115,12 @@ def create_app(store: TaskStore | None = None) -> FastAPI:
             "updated_at": datetime.now(UTC).isoformat(),
         }
         selected_store.write_state(task_id, accepted)
+        emit_event(
+            "accepted",
+            task_id=task_id,
+            fixture_id=fixture_id,
+            build_version=BUILD_VERSION,
+        )
         if cloud_backend:
             try:
                 execution_id = execute_cloud_run_job(task_id, fixture_id)
@@ -122,6 +134,12 @@ def create_app(store: TaskStore | None = None) -> FastAPI:
                     "updated_at": datetime.now(UTC).isoformat(),
                 }
                 selected_store.write_state(task_id, failed)
+                emit_event(
+                    "delivery_failed",
+                    task_id=task_id,
+                    reason_code=failed["reason_code"],
+                    error_type=failed["error_type"],
+                )
                 raise HTTPException(status_code=503, detail="Cloud task dispatch failed") from exc
             accepted.update(
                 status="queued",
@@ -130,6 +148,12 @@ def create_app(store: TaskStore | None = None) -> FastAPI:
                 updated_at=datetime.now(UTC).isoformat(),
             )
             selected_store.write_state(task_id, accepted)
+            emit_event(
+                "job_queued",
+                task_id=task_id,
+                fixture_id=fixture_id,
+                cloud_execution_id=execution_id,
+            )
         else:
             accepted.update(status="queued", current_step="local_worker_queued")
             selected_store.write_state(task_id, accepted)

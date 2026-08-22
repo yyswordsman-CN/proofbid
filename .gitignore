@@ -9,6 +9,7 @@ node_modules/
 test-results/
 playwright-report/
 build/
+.proofbid/evidence-raw/
 *.egg-info/
 *.tsbuildinfo
 apps/web/vite.config.js

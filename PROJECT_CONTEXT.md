@@ -17,12 +17,14 @@
 - Real Gemini mode now replaces provisional local planning metadata across `planner_receipt.json`, Trace, and `agent_run.json` before final rendering. Its acceptance gate requires `google.gemini`, Vertex AI ADC, configured `gemini-3.5-flash`, observed model version, `STOP`, non-zero usage, invocation ID and FunctionTool IDs, followed by a recursive scripted-fallback scan of the package.
 - FastAPI implements `POST /api/v1/tasks` (202), status polling, validated-bundle gate, and non-invoking health endpoint. Local and GCS task stores share the same contract.
 - Cloud Run Jobs v2 execution, GCS upload/download, a same-image Job worker, separate runtime service accounts, seven-day task lifecycle, scale-to-zero limits, Dockerfile, and Cloud Shell deployment script are implemented.
+- Cloud deployment now starts with a green-only fixture allowlist, binds the full commit SHA through `PROOFBID_BUILD_VERSION`, emits structured lifecycle events, and provides separate administrator scripts to open the blocked fixture and inject one renderer failure.
+- `proofbid-cloud-evidence` is implemented to collect and fail-closed reconcile revision/image, execution, task state, provider/usage/FunctionTool evidence, GCS generation/checksums, manifest/ZIP SHA-256 and redacted log timestamps. Raw downloads are ignored; cloud execution remains unverified.
 - The English React/Vite workbench implements the two public cases, task route, tool timeline, evidence/validation/artifact views, readiness, provider/cloud proof, and ZIP download. Arbitrary upload is not exposed.
 - The programmatic Eval matrix contains and executes 50 synthetic cases: 10 structure, 10 missing evidence, 10 product/pricing, 10 prompt injection, and 10 bounded renderer recovery.
 
 ## Verification completed in this workspace
 
-- `PYTHONPATH=src .venv/bin/python -m pytest -q`: **62 passed**, 0 failed; three upstream deprecation warnings. V2-specific tests include undeclared tools, out-of-order calls, duplicate completion, input drift, wrong terminal branch, green/blocked/recovery routes, fixture single-variable invariants, stable missing-item reason codes, API state, FunctionTool call IDs, real-receipt rebinding and scripted-marker rejection.
+- `PYTHONPATH=src .venv/bin/python -m pytest -q`: **65 passed**, 0 failed; three upstream deprecation warnings. V2-specific tests include undeclared tools, out-of-order calls, duplicate completion, input drift, wrong terminal branch, green/blocked/recovery routes, fixture single-variable invariants, stable missing-item reason codes, API state, FunctionTool call IDs, real-receipt rebinding, scripted-marker rejection, fixture allowlisting, and evidence-summary redaction.
 - Three direct v2 routes: green `completed`, authorization case `blocked`, injected render failure recovered exactly once and `completed`; all artifact integrity gates passed.
 - `proofbid eval`: **50/50 passed** in about 22.7 seconds on one local synthetic run. This is not a P95 or production reliability claim.
 - `npm run build`: production React build passed.

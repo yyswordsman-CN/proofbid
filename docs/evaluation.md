@@ -56,7 +56,7 @@ python -m pytest
 
 当前验证快照（2026-08-22，Python 3.14.6）：
 
-- `PYTHONPATH=src .venv/bin/python -m pytest -q`：单授权与真实 Provider 证据门禁改造后 `62 passed, 0 failed`，另有 3 条上游弃用警告；
+- `PYTHONPATH=src .venv/bin/python -m pytest -q`：P1 部署门禁与证据收集器改造后 `65 passed, 0 failed`，另有 3 条上游弃用警告；
 - `npm run build`：React/TypeScript/Vite 生产构建通过；
 - `npm run test:e2e`：Chromium 桌面与移动端 `6 passed`，包含单授权缺失 UI、业务码与 ZIP 下载；
 - `proofbid eval --output <new-dir>`：合成 Eval `50/50 passed`，约 22.7 秒；

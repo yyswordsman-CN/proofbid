@@ -125,7 +125,7 @@ npm run build
 npm run test:e2e
 ```
 
-The latest post-change local run passed 62 Python tests and 6 Playwright desktop/mobile checks. Treat these counts as a dated snapshot, not a permanently fixed target.
+The latest post-change local run passed 65 Python tests and 6 Playwright desktop/mobile checks. Treat these counts as a dated snapshot, not a permanently fixed target.
 
 The Playwright suite covers desktop and mobile layouts, both public fixture entry points, the complete event-to-download route, and horizontal overflow. Python tests cover deterministic regression, green/blocked/recovery agent routes, fail-closed contracts, API 202/poll/download gates, manifests, ZIPs, Word, and Excel consistency.
 
@@ -139,7 +139,35 @@ export PROOFBID_TASK_BUCKET=YOUR_GLOBALLY_UNIQUE_BUCKET
 bash infra/cloud-shell-deploy.sh
 ```
 
-The script enables only the required APIs, creates separate service and job identities, applies a seven-day `tasks/` lifecycle, deploys a scale-to-zero service with maximum one instance, and deploys a single-task/single-parallelism Job with a ten-minute timeout. Review IAM bindings and billing before execution. Creating resources, deploying, making the service public, pushing a repository, publishing a video, and submitting to Devpost all require explicit owner authorization.
+The script tags the image and both Cloud Run resources with the full source commit through `PROOFBID_BUILD_VERSION`. Its first revision permits only `complete_tender`, enables only the required APIs, creates separate service and job identities, applies a seven-day `tasks/` lifecycle, deploys a scale-to-zero service with maximum one instance, and deploys a single-task/single-parallelism Job with a ten-minute timeout. Review IAM bindings and billing before execution. Creating resources, deploying, making the service public, pushing a repository, publishing a video, and submitting to Devpost all require explicit owner authorization.
+
+Only after the first green closure is reconciled, enable the one-authorization blocker:
+
+```bash
+bash infra/enable-blocked-fixture.sh
+```
+
+The renderer recovery route is administrator-only and never appears in the public API/UI:
+
+```bash
+bash infra/run-admin-recovery.sh
+```
+
+Collect a redacted, hash-reconciled evidence summary with one command; raw GCS objects and logs remain under the ignored `.proofbid/evidence-raw/` directory:
+
+```bash
+proofbid-cloud-evidence \
+  --project "$GOOGLE_CLOUD_PROJECT" \
+  --region us-central1 \
+  --service proofbid \
+  --job proofbid-agent \
+  --bucket "$PROOFBID_TASK_BUCKET" \
+  --task-id task-0123456789abcdef0123 \
+  --execution projects/PROJECT/locations/REGION/jobs/proofbid-agent/executions/EXECUTION \
+  --output docs/evidence/cloud/task-0123456789abcdef0123.json
+```
+
+The collector fails closed unless the task is terminal, artifact integrity passed, the provider receipt matches its manifest hash, every FunctionTool receipt has a call ID, and the task build version matches the serving revision environment.
 
 ## Delivery artifacts
 
@@ -155,7 +183,7 @@ The manifest and ZIP are exact-set validated and SHA-256 bound. The tool receipt
 
 ## Scope and current evidence level
 
-Implemented and locally verified: synthetic green/blocked/recovery routes, bounded ADK FunctionTool registration, deterministic readiness, FastAPI task API, local background worker, GCS/Cloud Run adapters, React workbench, container and deployment assets.
+Implemented and locally verified: synthetic green/blocked/recovery routes, bounded ADK FunctionTool registration, deterministic readiness, FastAPI task API, fixture deployment allowlist, structured lifecycle logs, administrator-only recovery launcher, redacted cloud evidence collector, local background worker, GCS/Cloud Run adapters, React workbench, container and deployment assets.
 
 Not yet verified here: a real Gemini network call, Google Cloud resource creation, Cloud Run deployment, public `.run.app` URL, Cloud Logging evidence, public repository, demo video, Credits request, or Devpost submission. See [PROJECT_CONTEXT.md](PROJECT_CONTEXT.md) for the current handoff and [rules-snapshot.md](docs/competition/rules-snapshot.md) for external-action gates.
 
