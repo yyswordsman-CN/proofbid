@@ -43,6 +43,7 @@
 - No isolated Google Cloud project, billing/Credits result, Artifact Registry image, Cloud Run Service/Job, GCS bucket, Cloud Logging evidence, revision digest, execution ID, or public `.run.app` URL has been created or verified.
 - No green/blocked case has been run three times in Google Cloud; no cloud token/cost sample exists.
 - No public GitHub repository, commit/tag, push, video, Devpost submission, or external receipt exists.
+- Public-repository preflight passed for secrets, absolute user paths, tracked size, failure-injection exposure, license, IP disclosure and notices. GitHub publication remains blocked because the active `gh` token is invalid and the owner did not complete the device authorization before it expired.
 
 ## Locked scope
 
