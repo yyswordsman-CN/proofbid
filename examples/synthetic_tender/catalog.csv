@@ -1,0 +1,5 @@
+sku,name,model,category,screen_inches,resolution,memory_gb,storage_gb,warranty_years,unit_price,currency,authorized
+DISPLAY-98,智慧会议显示设备,PB-X98,display,98,3840x2160,,,3,128000,CNY,true
+DISPLAY-86,智慧会议显示设备,PB-X86,display,86,3840x2160,,,3,88000,CNY,true
+CONTROL-16,会议控制终端,PB-C16,controller,,,16,512,3,18000,CNY,true
+CONTROL-8,会议控制终端,PB-C8,controller,,,8,256,1,9000,CNY,true

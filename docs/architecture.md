@@ -1,0 +1,112 @@
+# ProofBid Architecture
+
+> 2026-08-22 implementation snapshot. Cloud components are implemented as deployable adapters and assets but have not yet been deployed or verified in this workspace.
+
+## System flow
+
+```mermaid
+flowchart LR
+  UI[React synthetic case event] -->|POST /api/v1/tasks| API[Cloud Run Service\nFastAPI + static UI]
+  API -->|state / artifacts| GCS[(Cloud Storage\ntasks/task-id)]
+  API -->|Jobs v2 run override| JOB[Cloud Run Job]
+  JOB --> ADK[Google ADK Agent\nGemini 3.5 Flash]
+  ADK --> TOOLS[Bounded FunctionTools]
+  TOOLS --> CORE[Deterministic domain core\nEvidence / BOM / readiness]
+  CORE --> RENDER[Controlled renderers]
+  RENDER --> VALIDATE[Domain + delivery validators]
+  VALIDATE --> GCS
+  UI -->|poll every 2 seconds| API
+  API -->|validated ZIP only| UI
+```
+
+The public service accepts only `complete_tender` and `blocked_missing_authorization`, returns `202`, writes task state, and starts one background Job. The Job uses the same image with `python -m proofbid.task_worker`. Local mode uses the same API and state contract with a single background worker and local object store.
+
+## Trust and authority boundaries
+
+| Boundary | May decide | Cannot decide |
+|---|---|---|
+| React event | Select one built-in synthetic fixture | Upload files, provide facts, submit a bid |
+| Gemini + ADK | Choose registered tools, dependency-valid order, complete/blocked branch, one renderer retry | Paths, shell, SQL, URLs, prices, evidence, compliance, permissions |
+| `TaskRuntime` | Enforce tool allowlist, call budget, dependency order, retry relation, terminal state | Invent facts or bypass validators |
+| Deterministic domain core | Extract requirements, match evidence, construct BOM, identify missing items | Sign, send, freeze price, make commercial commitments |
+| Validators | Release complete or blocked preparation package | Execute submission |
+| Cloud identities | Service starts Job and accesses task objects; Job calls Vertex AI and accesses task objects | Broad project administration or human credentials |
+
+All input document content is untrusted data. Tool functions accept no model-selected paths or business facts. Runtime objects are server-bound to a single task/input digest. `submission_executed=false` and `high_risk_actions_locked=true` are contract invariants.
+
+## Agent v2 state machine
+
+```text
+declare_execution_plan
+  -> scan_inputs
+  -> extract_requirements ─┐
+  -> load_bidder_evidence ─┼-> build_analysis -> validate_domain
+  -> load_product_catalog ─┘                         |
+                                                    v
+                                             render_delivery
+                                              |           |
+                                           success    RENDER_TRANSIENT
+                                              |           |
+                                              |      retry_render once
+                                              +-----------+
+                                                    |
+                                             validate_delivery
+                                              |           |
+                                         ready=true   ready=false
+                                              |           |
+                                      finalize_complete finalize_blocked
+```
+
+The declared plan preserves both deterministic terminal branches, but only the correct branch is executed. Core analysis dependencies may be ordered dynamically. `retry_render` is callable once and only after a recoverable render receipt. Unknown tools, missing dependencies, duplicate completed calls, more than 14 calls, input drift, invalid branch selection, provider/schema failure, and any other retry fail closed.
+
+## Evidence and receipts
+
+V2 delivery adds two artifacts to the existing planning and domain package:
+
+- `agent_run.json`: task/input digest, parser/failure strategies, selected tools, observed provider/model/usage/invocation evidence, tool-receipt digest, terminal status, readiness, and locked high-risk actions.
+- `tool_receipts.jsonl`: sequence, tool, status, reason code, duration, input digest, result digest, and `retry_of` relation.
+
+No artifact contains a credential, complete prompt, hidden thought, or full source document. The final manifest exact-set binds all payload files and the ZIP. Planning evidence and Trace metadata are cross-validated. The Renderer runs only over structured domain objects.
+
+## Readiness contract
+
+`ReadinessDecision` is the sole external readiness shape:
+
+```json
+{
+  "ready_for_human_review": true,
+  "ready_for_submission": true,
+  "submission_executed": false,
+  "high_risk_actions_locked": true,
+  "blocking_reason_codes": []
+}
+```
+
+`complete_tender` must set both readiness flags to `true`; the missing-authorization fixture must set both to `false`. A blocked task still returns a validated ZIP containing the evidence ledger and missing-item list. UI wording is “Preparation package ready for controlled submission”; it never says that submission occurred.
+
+## Service and storage contracts
+
+- `POST /api/v1/tasks` accepts one fixture ID and returns `202` plus a status URL.
+- `GET /api/v1/tasks/{task_id}` returns accepted/queued/running/completed/blocked/failed plus minimal review summaries.
+- `GET /api/v1/tasks/{task_id}/bundle` returns only completed/blocked deliveries whose artifact integrity passed.
+- `GET /healthz` reports build health only and cannot trigger Gemini.
+- GCS object prefix: `tasks/{task_id}/state.json` and `tasks/{task_id}/artifacts/{basename}`.
+- Task IDs are restricted to `task-[0-9a-f]{20}` and artifact access collapses to fixed basenames.
+
+The bucket lifecycle deletes `tasks/` objects after seven days. A curated evidence prefix, if added later, must have a separate retention rule rather than disabling the public task cleanup.
+
+## Cloud resource profile
+
+- Service: scale-to-zero, maximum one instance, public synthetic UI, dedicated service account.
+- Job: one task, parallelism one, zero platform retries, ten-minute timeout, dedicated job account.
+- Vertex AI: ADC, `gemini-3.5-flash`, location `global`; no API key stored.
+- Storage: uniform bucket access, seven-day lifecycle.
+- Logging: normal Cloud Run stdout/request logs; application Trace remains packaged JSONL.
+
+The repository intentionally does not add Firestore, Pub/Sub, PDF/OCR, arbitrary upload, multi-agent orchestration, signing, or submission.
+
+## Current evidence boundary
+
+Locally verified: deterministic baseline, green/blocked/recovery v2 routes, real ADK FunctionTool registration, state/receipt/digest gates, API event-to-download flow, React production build, desktop/mobile Chromium checks, and a 50-case synthetic local Eval.
+
+Not yet verified: real Gemini provider events, Vertex AI ADC in an isolated competition project, Cloud Run Service/Job execution, Cloud Storage object flow, Cloud Logging, public URL, IAM in the target project, or cloud cost. Deployment files are implementation assets, not deployment evidence.

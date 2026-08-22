@@ -1,0 +1,48 @@
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+[project]
+name = "proofbid"
+version = "0.1.0"
+description = "Evidence-driven autonomous tender preparation baseline"
+readme = "README.md"
+requires-python = ">=3.12"
+license = { text = "Apache-2.0" }
+authors = [{ name = "ProofBid Team" }]
+dependencies = [
+  "openpyxl>=3.1,<4",
+  "python-docx>=1.2,<2",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=9,<10",
+  "httpx>=0.28,<1",
+]
+google = [
+  "google-adk==2.7.1",
+  "google-genai==2.18.1",
+  "pydantic>=2.12,<3",
+]
+service = [
+  "fastapi>=0.116,<1",
+  "uvicorn[standard]>=0.35,<1",
+  "google-auth>=2.40,<3",
+  "google-cloud-storage>=3.2,<4",
+]
+
+[project.scripts]
+proofbid = "proofbid.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/proofbid"]
+
+[tool.pytest.ini_options]
+addopts = "-q"
+testpaths = ["tests"]
+pythonpath = ["src"]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100

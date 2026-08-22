@@ -1,0 +1,12 @@
+{
+  "synthetic": true,
+  "bidder_name": "演示智造有限公司",
+  "documents": [
+    {"name": "营业执照", "status": "valid", "valid_until": "2028-12-31", "source": "synthetic://bidder/license"},
+    {"name": "ISO 9001 质量管理体系认证", "status": "valid", "valid_until": "2027-06-30", "source": "synthetic://bidder/iso9001"}
+  ],
+  "capabilities": [
+    {"name": "交付周期", "value": "20 个自然日"},
+    {"name": "安装与验收", "value": "支持"}
+  ]
+}
