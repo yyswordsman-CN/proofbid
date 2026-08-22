@@ -91,7 +91,7 @@ proofbid google-agent-run \
   --output build/google-green
 ```
 
-A valid real receipt must contain the observed model version, token usage, finish reason, invocation ID, event count, SDK versions, request/response digest, tool sequence, retry relation, and task/input/result digest chain. This repository does not claim a real Gemini call until such a receipt is captured.
+A valid real receipt must identify `google.gemini`, Vertex AI ADC, the configured `gemini-3.5-flash` model and observed model version, `STOP`, non-zero usage, invocation ID, event count, SDK versions, request/response digests, and one ADK `function_call_id` for every FunctionTool receipt. Before freezing the ZIP, the runtime replaces provisional local planning metadata and recursively scans packaged JSON, Office files, manifest, and archive for scripted fallback markers. This repository does not claim a real Gemini call until such a receipt is captured.
 
 ## HTTP API
 
@@ -125,7 +125,7 @@ npm run build
 npm run test:e2e
 ```
 
-The latest post-change local run passed 58 Python tests and 6 Playwright desktop/mobile checks. Treat these counts as a dated snapshot, not a permanently fixed target.
+The latest post-change local run passed 62 Python tests and 6 Playwright desktop/mobile checks. Treat these counts as a dated snapshot, not a permanently fixed target.
 
 The Playwright suite covers desktop and mobile layouts, both public fixture entry points, the complete event-to-download route, and horizontal overflow. Python tests cover deterministic regression, green/blocked/recovery agent routes, fail-closed contracts, API 202/poll/download gates, manifests, ZIPs, Word, and Excel consistency.
 

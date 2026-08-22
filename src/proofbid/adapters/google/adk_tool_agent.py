@@ -6,6 +6,7 @@ import asyncio
 import hashlib
 import json
 import time
+from datetime import UTC, datetime
 from enum import Enum
 from pathlib import Path
 from typing import Any
@@ -19,7 +20,7 @@ from ...agent_runtime_v2 import (
 )
 from ...intake import scan_workspace
 from ...pipeline import REQUIRED_INPUTS, assert_output_target_available, new_task_id
-from ...planning import build_task_spec
+from ...planning import ProviderReceipt, build_task_spec
 from .gemini import GeminiProviderAdapter, GeminiProviderConfig
 
 
@@ -101,9 +102,12 @@ async def run_google_tool_agent_pipeline_async(
         task_spec=task_spec,
         planning_result=_local_planning_result(task_spec),
         inject_render_failure=inject_render_failure,
+        require_real_provider_evidence=True,
     )
     config = GeminiProviderConfig.from_env(model=model)
     provider = GeminiProviderAdapter(config)
+    if provider.auth_mode != "vertex_ai":
+        raise AgentRuntimeError("google-agent-run requires Vertex AI ADC")
     prompt = _prompt(runtime)
     request_digest = _sha256_text(prompt)
     adk_version, genai_version = provider.package_versions()
@@ -142,6 +146,7 @@ async def run_google_tool_agent_pipeline_async(
     invocation_id: str | None = None
     interaction_id: str | None = None
     final_text = ""
+    provider_started_at = datetime.now(UTC).isoformat()
     started = time.perf_counter()
     try:
         async with Runner(app=app, session_service=sessions) as runner:
@@ -179,26 +184,29 @@ async def run_google_tool_agent_pipeline_async(
         raise AgentRuntimeError("Gemini stopped without a valid deterministic terminal state")
     if not model_version or usage is None or not invocation_id:
         raise AgentRuntimeError("Gemini response lacked required provider execution evidence")
-    runtime.set_provider_evidence(
-        {
-            "provider": provider.provider_name,
-            "configured_model": provider.configured_model,
-            "model_version": model_version,
-            "auth_mode": provider.auth_mode,
-            "adk_version": adk_version,
-            "genai_version": genai_version,
-            "duration_ms": round((time.perf_counter() - started) * 1000, 3),
-            "event_count": event_count,
-            "invocation_id": invocation_id,
-            "interaction_id": interaction_id,
-            "finish_reason": finish_reason,
-            "prompt_tokens": getattr(usage, "prompt_token_count", None),
-            "output_tokens": getattr(usage, "candidates_token_count", None),
-            "total_tokens": getattr(usage, "total_token_count", None),
-            "request_digest": request_digest,
-            "response_digest": _sha256_text(final_text),
-        }
+    receipt = ProviderReceipt(
+        provider=provider.provider_name,
+        configured_model=provider.configured_model,
+        model_version=model_version,
+        auth_mode=provider.auth_mode,
+        adk_version=adk_version,
+        genai_version=genai_version,
+        started_at=provider_started_at,
+        duration_ms=round((time.perf_counter() - started) * 1000, 3),
+        event_count=event_count,
+        invocation_id=invocation_id,
+        interaction_id=interaction_id,
+        finish_reason=finish_reason,
+        prompt_tokens=getattr(usage, "prompt_token_count", None),
+        output_tokens=getattr(usage, "candidates_token_count", None),
+        total_tokens=getattr(usage, "total_token_count", None),
+        request_digest=request_digest,
+        response_digest=_sha256_text(final_text),
+        plan_digest=runtime.planning_result.plan.digest,
+        schema_validated=True,
+        policy_validated=True,
     )
+    runtime.bind_real_provider_receipt(receipt)
     return runtime.freeze_delivery()
 
 

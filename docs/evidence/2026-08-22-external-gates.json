@@ -1,0 +1,31 @@
+{
+  "schema_version": "proofbid.external-gates/v1",
+  "observed_at": "2026-08-22T07:31:43Z",
+  "devpost": {
+    "authentication": "required",
+    "join_status": "owner_action_required",
+    "participant_mode": "intended_individual_solo",
+    "eligibility_attestation": "owner_action_required",
+    "receipt_saved": false
+  },
+  "credits": {
+    "status": "BLOCKED_BILLING_ACCOUNT_MISSING",
+    "application_submitted": false,
+    "billing_account_id_available": false,
+    "receipt_saved": false
+  },
+  "google_cloud": {
+    "gcloud_available": false,
+    "vertex_environment_configured": false,
+    "adc_verified": false,
+    "project_created": false
+  },
+  "claims_excluded": [
+    "Devpost joined",
+    "eligibility confirmed",
+    "Credits applied",
+    "Credits approved",
+    "Google Cloud project created",
+    "real Gemini call completed"
+  ]
+}

@@ -64,7 +64,9 @@ The declared plan preserves both deterministic terminal branches, but only the c
 V2 delivery adds two artifacts to the existing planning and domain package:
 
 - `agent_run.json`: task/input digest, parser/failure strategies, selected tools, observed provider/model/usage/invocation evidence, tool-receipt digest, terminal status, readiness, and locked high-risk actions.
-- `tool_receipts.jsonl`: sequence, tool, status, reason code, duration, input digest, result digest, and `retry_of` relation.
+- `tool_receipts.jsonl`: sequence, tool, status, reason code, duration, input digest, result digest, `retry_of` relation, and the ADK `function_call_id` for real FunctionTool calls. Scripted local calls retain `null` so they cannot be mistaken for provider evidence.
+
+Real-provider mode is fail closed: the final receipt must bind `google.gemini`, Vertex AI ADC, configured `gemini-3.5-flash`, an observed model version, `STOP`, non-zero usage, invocation ID, and unique FunctionTool call IDs. The final freeze replaces provisional local planning metadata in `planner_receipt.json`, Trace, and `agent_run.json`, then recursively scans all package containers for scripted-policy markers.
 
 No artifact contains a credential, complete prompt, hidden thought, or full source document. The final manifest exact-set binds all payload files and the ZIP. Planning evidence and Trace metadata are cross-validated. The Renderer runs only over structured domain objects.
 

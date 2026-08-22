@@ -10,6 +10,8 @@ import pytest
 jsonschema = pytest.importorskip("jsonschema")
 
 from proofbid import scan_workspace  # noqa: E402
+from proofbid.agent_runtime_v2 import ToolCallReceipt  # noqa: E402
+from proofbid.contracts import MissingItem, Severity, to_primitive  # noqa: E402
 from proofbid.planning import (  # noqa: E402
     ExecutionPlan,
     PlanStep,
@@ -18,7 +20,6 @@ from proofbid.planning import (  # noqa: E402
     REQUIRED_TOOL_DEPENDENCIES,
     build_task_spec,
 )
-from proofbid.contracts import MissingItem, Severity, to_primitive  # noqa: E402
 
 
 PROJECT_ROOT = Path(__file__).parents[1]
@@ -97,3 +98,22 @@ def test_missing_item_requires_a_stable_business_reason_code() -> None:
         blocks_completion=True,
     )
     jsonschema.validate(to_primitive(item), _load_schema("missing-item.v1.schema.json"))
+
+
+def test_tool_call_receipt_contract_exposes_function_call_id() -> None:
+    receipt = ToolCallReceipt(
+        sequence=1,
+        tool="scan_inputs",
+        status="completed",
+        reason_code="OK",
+        started_at=datetime.now(UTC).isoformat(),
+        duration_ms=1.0,
+        input_digest="a" * 64,
+        result_digest="b" * 64,
+        function_call_id="adk-call-001",
+    )
+    jsonschema.validate(
+        receipt.to_dict(),
+        _load_schema("tool-call-receipt.v2.schema.json"),
+        format_checker=jsonschema.FormatChecker(),
+    )

@@ -10,6 +10,7 @@ from __future__ import annotations
 import hashlib
 import json
 import time
+import zipfile
 from dataclasses import asdict, dataclass
 from datetime import UTC, datetime
 from enum import Enum
@@ -104,6 +105,7 @@ class ToolCallReceipt:
     duration_ms: float
     input_digest: str
     result_digest: str
+    function_call_id: str | None = None
     retry_of: int | None = None
     schema_version: str = TOOL_RECEIPT_SCHEMA_VERSION
 
@@ -193,12 +195,14 @@ class TaskRuntime:
         task_spec: TaskSpec,
         planning_result: PlanningResult,
         inject_render_failure: bool = False,
+        require_real_provider_evidence: bool = False,
     ) -> None:
         self.workspace = Path(workspace).resolve()
         self.output_dir = _prepare_output(output_dir)
         self.task_spec = task_spec
         self.planning_result = planning_result
         self.inject_render_failure = inject_render_failure
+        self.require_real_provider_evidence = require_real_provider_evidence
         self.trace = TraceRecorder(self.output_dir / "trace.jsonl", task_spec.task_id)
         self.receipts: list[ToolCallReceipt] = []
         self.selected_tools: tuple[RuntimeTool, ...] = ()
@@ -272,9 +276,90 @@ class TaskRuntime:
     def supplemental_payloads(self) -> tuple[Path, ...]:
         return (*self._planning_payloads, self.agent_run_path, self.tool_receipts_path)
 
-    def set_provider_evidence(self, evidence: dict[str, Any]) -> None:
-        self.provider_evidence = dict(evidence)
+    def bind_real_provider_receipt(self, receipt: ProviderReceipt) -> None:
+        """Replace provisional local planning metadata before final delivery freeze."""
+
+        self._require(self.require_real_provider_evidence, "Runtime is not in real-provider mode")
+        self._require(receipt.provider == "google.gemini", "Real provider must be google.gemini")
+        self._require(receipt.auth_mode == "vertex_ai", "Real provider must use Vertex AI ADC")
+        self._require(
+            receipt.configured_model == "gemini-3.5-flash",
+            "Real provider must use gemini-3.5-flash",
+        )
+        self._require(receipt.finish_reason == "STOP", "Real provider finish reason must be STOP")
+        self._require(bool(receipt.model_version), "Real provider model version is required")
+        self._require(
+            bool(receipt.invocation_id) and not receipt.invocation_id.startswith("local-"),
+            "Real provider invocation ID is required",
+        )
+        self._require(
+            receipt.prompt_tokens is not None
+            and receipt.prompt_tokens > 0
+            and receipt.total_tokens is not None
+            and receipt.total_tokens > 0,
+            "Real provider usage must be non-zero",
+        )
+        call_ids = [item.function_call_id for item in self.receipts]
+        self._require(
+            bool(call_ids) and all(call_ids) and len(set(call_ids)) == len(call_ids),
+            "Every real FunctionTool receipt requires a unique function_call_id",
+        )
+        self.planning_result = PlanningResult(plan=self.planning_result.plan, receipt=receipt)
+        self.provider_evidence = receipt.to_dict()
+        self._planning_payloads = _write_planning_payloads(
+            self.output_dir,
+            self.task_spec,
+            self.planning_result,
+        )
+        self._replace_planning_trace(receipt)
         self._persist_agent_evidence()
+
+    def _replace_planning_trace(self, receipt: ProviderReceipt) -> None:
+        rows = [
+            json.loads(line)
+            for line in self.trace.path.read_text(encoding="utf-8").splitlines()
+            if line.strip()
+        ]
+        self._require(
+            len(rows) >= 2
+            and rows[0].get("step") == "planning"
+            and rows[1].get("step") == "planning",
+            "Planning Trace cannot be rebound",
+        )
+        rows[0].update(
+            actor=receipt.provider,
+            status="started",
+            duration_ms=None,
+            details={
+                "task_spec_digest": self.task_spec.digest,
+                "provider_started_at": receipt.started_at,
+            },
+        )
+        rows[1].update(
+            actor=receipt.provider,
+            status="completed",
+            duration_ms=round(receipt.duration_ms, 3),
+            details={
+                "configured_model": receipt.configured_model,
+                "model_version": receipt.model_version,
+                "auth_mode": receipt.auth_mode,
+                "adk_version": receipt.adk_version,
+                "genai_version": receipt.genai_version,
+                "event_count": receipt.event_count,
+                "invocation_id": receipt.invocation_id,
+                "interaction_id": receipt.interaction_id,
+                "finish_reason": receipt.finish_reason,
+                "request_digest": receipt.request_digest,
+                "response_digest": receipt.response_digest,
+                "plan_digest": receipt.plan_digest,
+                "schema_validated": receipt.schema_validated,
+                "policy_validated": receipt.policy_validated,
+                "prompt_tokens": receipt.prompt_tokens,
+                "output_tokens": receipt.output_tokens,
+                "total_tokens": receipt.total_tokens,
+            },
+        )
+        _write_jsonl(self.trace.path, rows)
 
     def _agent_run_payload(self) -> dict[str, Any]:
         readiness = (
@@ -352,8 +437,19 @@ class TaskRuntime:
             required = {RuntimeTool.RETRY_RENDER}
         self._require(required <= completed, f"Dependencies are not satisfied for {tool.value}")
 
-    def invoke(self, tool: RuntimeTool | str, **arguments: Any) -> dict[str, Any]:
+    def invoke(
+        self,
+        tool: RuntimeTool | str,
+        *,
+        function_call_id: str | None = None,
+        **arguments: Any,
+    ) -> dict[str, Any]:
         resolved = RuntimeTool(tool)
+        if self.require_real_provider_evidence:
+            self._require(
+                bool(function_call_id),
+                "Real FunctionTool calls require an ADK function_call_id",
+            )
         self._require(self.terminal_status is None, "The task is already terminal")
         self._require(len(self.receipts) < 14, "The maximum tool-call budget was exceeded")
         if resolved is not RuntimeTool.DECLARE_PLAN:
@@ -386,6 +482,7 @@ class TaskRuntime:
                 "task_spec_digest": self.task_spec.digest,
                 "tool": resolved.value,
                 "arguments": arguments,
+                "function_call_id": function_call_id,
                 "prior_receipts": [receipt.result_digest for receipt in self.receipts],
             }
         )
@@ -411,6 +508,7 @@ class TaskRuntime:
                 duration_ms=round((time.perf_counter() - started) * 1000, 3),
                 input_digest=input_digest,
                 result_digest=_digest(result),
+                function_call_id=function_call_id,
                 retry_of=retry_of,
             )
             self.receipts.append(receipt)
@@ -433,6 +531,7 @@ class TaskRuntime:
             duration_ms=round((time.perf_counter() - started) * 1000, 3),
             input_digest=input_digest,
             result_digest=_digest(result),
+            function_call_id=function_call_id,
             retry_of=retry_of,
         )
         self.receipts.append(receipt)
@@ -579,6 +678,8 @@ class TaskRuntime:
 
     def freeze_delivery(self) -> dict[str, Any]:
         self._require(self.terminal_status in {"completed", "blocked"}, "Task has no valid terminal state")
+        if self.require_real_provider_evidence:
+            self._validate_real_provider_evidence()
         self._persist_agent_evidence()
         self.artifacts = render_bundle(
             output_dir=self.output_dir,
@@ -596,6 +697,8 @@ class TaskRuntime:
             and finding.code != "MANDATORY_REQUIREMENT_RESOLVED"
         ]
         self._require(not fatal, "Final delivery validation failed: " + ", ".join(fatal[:8]))
+        if self.require_real_provider_evidence:
+            self._scan_for_scripted_fallback_markers()
         readiness = build_readiness_decision(self.bundle, self.domain_report)
         subtotal = sum(
             (line.qty or 0.0) * (line.unit_price or 0.0)
@@ -618,6 +721,49 @@ class TaskRuntime:
             "artifacts": _artifact_paths(self.artifacts),
             "provider": self.provider_evidence,
         }
+
+    def _validate_real_provider_evidence(self) -> None:
+        receipt = self.planning_result.receipt
+        self._require(receipt.provider == "google.gemini", "Final provider is not Google Gemini")
+        self._require(receipt.auth_mode == "vertex_ai", "Final provider is not Vertex AI")
+        self._require(
+            receipt.configured_model == "gemini-3.5-flash",
+            "Final configured model is not gemini-3.5-flash",
+        )
+        self._require(receipt.finish_reason == "STOP", "Final finish reason is not STOP")
+        self._require(bool(receipt.model_version), "Final model version is missing")
+        self._require(bool(receipt.invocation_id), "Final invocation ID is missing")
+        self._require(
+            receipt.prompt_tokens is not None
+            and receipt.prompt_tokens > 0
+            and receipt.total_tokens is not None
+            and receipt.total_tokens > 0,
+            "Final provider usage is missing or zero",
+        )
+        self._require(
+            all(item.function_call_id for item in self.receipts),
+            "Final tool receipts are not bound to ADK FunctionTool call IDs",
+        )
+
+    def _scan_for_scripted_fallback_markers(self) -> None:
+        markers = (
+            b"proofbid.scripted-policy",
+            b"deterministic-route-policy",
+            b"local-scripted",
+        )
+        hits: list[str] = []
+        for path in (*self.artifacts.payload_files, self.artifacts.manifest, self.artifacts.archive):
+            if zipfile.is_zipfile(path):
+                with zipfile.ZipFile(path) as archive:
+                    for member in archive.namelist():
+                        payload = archive.read(member)
+                        if any(marker in payload for marker in markers):
+                            hits.append(f"{path.name}:{member}")
+            else:
+                payload = path.read_bytes()
+                if any(marker in payload for marker in markers):
+                    hits.append(path.name)
+        self._require(not hits, "Scripted fallback markers remain in final package: " + ", ".join(hits))
 
 
 def _declared_tools() -> list[str]:
@@ -676,6 +822,18 @@ def build_adk_function_tools(runtime: TaskRuntime) -> list[Any]:
     except ImportError as exc:
         raise AgentRuntimeError("Install the ProofBid google extra for ADK tools") from exc
 
+    def invoke_from_adk(
+        tool: RuntimeTool,
+        tool_context: Any,
+        **arguments: Any,
+    ) -> dict[str, Any]:
+        function_call_id = getattr(tool_context, "function_call_id", None)
+        return runtime.invoke(
+            tool,
+            function_call_id=str(function_call_id) if function_call_id else None,
+            **arguments,
+        )
+
     async def declare_execution_plan(
         selected_tools: list[str],
         parser_strategy: str,
@@ -684,8 +842,9 @@ def build_adk_function_tools(runtime: TaskRuntime) -> list[Any]:
     ) -> dict[str, Any]:
         """Declare the bounded tools, typed parser strategy, and failure policy for this task."""
 
-        return runtime.invoke(
+        return invoke_from_adk(
             RuntimeTool.DECLARE_PLAN,
+            tool_context,
             selected_tools=selected_tools,
             parser_strategy=parser_strategy,
             failure_policy=failure_policy,
@@ -694,57 +853,57 @@ def build_adk_function_tools(runtime: TaskRuntime) -> list[Any]:
     async def scan_inputs(tool_context=None) -> dict[str, Any]:
         """Scan the pre-bound task workspace and verify its immutable manifest."""
 
-        return runtime.invoke(RuntimeTool.SCAN_INPUTS)
+        return invoke_from_adk(RuntimeTool.SCAN_INPUTS, tool_context)
 
     async def extract_requirements(tool_context=None) -> dict[str, Any]:
         """Extract evidence-bound tender requirements with the declared typed parser."""
 
-        return runtime.invoke(RuntimeTool.EXTRACT_REQUIREMENTS)
+        return invoke_from_adk(RuntimeTool.EXTRACT_REQUIREMENTS, tool_context)
 
     async def load_bidder_evidence(tool_context=None) -> dict[str, Any]:
         """Load the pre-bound bidder evidence without accepting paths or facts from the model."""
 
-        return runtime.invoke(RuntimeTool.LOAD_BIDDER_EVIDENCE)
+        return invoke_from_adk(RuntimeTool.LOAD_BIDDER_EVIDENCE, tool_context)
 
     async def load_product_catalog(tool_context=None) -> dict[str, Any]:
         """Load the pre-bound product catalog without accepting model-selected paths."""
 
-        return runtime.invoke(RuntimeTool.LOAD_PRODUCT_CATALOG)
+        return invoke_from_adk(RuntimeTool.LOAD_PRODUCT_CATALOG, tool_context)
 
     async def build_analysis(tool_context=None) -> dict[str, Any]:
         """Build matches, BOM, deviations, and missing items deterministically."""
 
-        return runtime.invoke(RuntimeTool.BUILD_ANALYSIS)
+        return invoke_from_adk(RuntimeTool.BUILD_ANALYSIS, tool_context)
 
     async def validate_domain(tool_context=None) -> dict[str, Any]:
         """Run deterministic evidence and business-readiness gates."""
 
-        return runtime.invoke(RuntimeTool.VALIDATE_DOMAIN)
+        return invoke_from_adk(RuntimeTool.VALIDATE_DOMAIN, tool_context)
 
     async def render_delivery(tool_context=None) -> dict[str, Any]:
         """Render the controlled Word, Excel, JSON, Trace, manifest, and ZIP delivery."""
 
-        return runtime.invoke(RuntimeTool.RENDER_DELIVERY)
+        return invoke_from_adk(RuntimeTool.RENDER_DELIVERY, tool_context)
 
     async def retry_render(tool_context=None) -> dict[str, Any]:
         """Retry rendering once, only after a recoverable renderer failure receipt."""
 
-        return runtime.invoke(RuntimeTool.RETRY_RENDER)
+        return invoke_from_adk(RuntimeTool.RETRY_RENDER, tool_context)
 
     async def validate_delivery(tool_context=None) -> dict[str, Any]:
         """Validate cross-artifact content, hashes, archive membership, and planning evidence."""
 
-        return runtime.invoke(RuntimeTool.VALIDATE_DELIVERY)
+        return invoke_from_adk(RuntimeTool.VALIDATE_DELIVERY, tool_context)
 
     async def finalize_complete(tool_context=None) -> dict[str, Any]:
         """Finish only when deterministic readiness and artifact gates both pass."""
 
-        return runtime.invoke(RuntimeTool.FINALIZE_COMPLETE)
+        return invoke_from_adk(RuntimeTool.FINALIZE_COMPLETE, tool_context)
 
     async def finalize_blocked(tool_context=None) -> dict[str, Any]:
         """Finish with a reviewable missing-item package when business evidence is incomplete."""
 
-        return runtime.invoke(RuntimeTool.FINALIZE_BLOCKED)
+        return invoke_from_adk(RuntimeTool.FINALIZE_BLOCKED, tool_context)
 
     return [
         FunctionTool(function)

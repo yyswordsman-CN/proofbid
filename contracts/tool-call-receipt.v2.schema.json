@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://proofbid.local/contracts/tool-call-receipt.v2.schema.json",
+  "title": "ProofBid ToolCallReceipt v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "sequence",
+    "tool",
+    "status",
+    "reason_code",
+    "started_at",
+    "duration_ms",
+    "input_digest",
+    "result_digest",
+    "function_call_id",
+    "retry_of"
+  ],
+  "properties": {
+    "schema_version": {"const": "proofbid.tool-receipt/v2"},
+    "sequence": {"type": "integer", "minimum": 1},
+    "tool": {"type": "string", "minLength": 1},
+    "status": {"enum": ["completed", "recoverable_error", "failed"]},
+    "reason_code": {"type": "string", "minLength": 1},
+    "started_at": {"type": "string", "format": "date-time"},
+    "duration_ms": {"type": "number", "minimum": 0},
+    "input_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "result_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "function_call_id": {"type": ["string", "null"], "minLength": 1},
+    "retry_of": {"type": ["integer", "null"], "minimum": 1}
+  }
+}
