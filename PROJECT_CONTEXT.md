@@ -18,16 +18,17 @@
 - FastAPI implements `POST /api/v1/tasks` (202), status polling, validated-bundle gate, and non-invoking health endpoint. Local and GCS task stores share the same contract.
 - Cloud Run Jobs v2 execution, GCS upload/download, a same-image Job worker, separate runtime service accounts, seven-day task lifecycle, scale-to-zero limits, Dockerfile, and Cloud Shell deployment script are implemented.
 - Cloud deployment now starts with a green-only fixture allowlist, binds the full commit SHA through `PROOFBID_BUILD_VERSION`, emits structured lifecycle events, and provides separate administrator scripts to open the blocked fixture and inject one renderer failure.
-- `proofbid-cloud-evidence` is implemented to collect and fail-closed reconcile revision/image, execution, task state, provider/usage/FunctionTool evidence, GCS generation/checksums, manifest/ZIP SHA-256 and redacted log timestamps. Raw downloads are ignored; cloud execution remains unverified.
+- `proofbid-cloud-evidence` is implemented to collect and fail-closed reconcile revision/image digest, execution, task state, provider/usage/FunctionTool evidence, GCS generation/checksums, Service/GCS ZIP SHA-256 and redacted log timestamps. Raw downloads are ignored; the first green cloud execution is verified below.
 - The English React/Vite workbench implements the two public cases, task route, tool timeline, evidence/validation/artifact views, readiness, provider/cloud proof, and ZIP download. Arbitrary upload is not exposed.
 - A versioned English Mermaid architecture source now exports to a reviewed SVG and exact 1920×1080 PNG using pinned Mermaid CLI 11.16.0. A clean-clone verifier covers Python 3.12/Node 22 installs, tests, Eval, frontend, Playwright, Workbench API/download, Docker build, and container green route.
 - The programmatic Eval matrix contains and executes 50 synthetic cases: 10 structure, 10 missing evidence, 10 product/pricing, 10 prompt injection, and 10 bounded renderer recovery.
 
 ## Verification completed in this workspace
 
-- `PYTHONPATH=src .venv/bin/python -m pytest -q`: **68 passed**, 0 failed; three upstream deprecation warnings. V2-specific tests include undeclared tools, out-of-order calls, duplicate completion, input drift, wrong terminal branch, green/blocked/recovery routes, fixture single-variable invariants, stable missing-item reason codes, API state, FunctionTool call IDs, real-receipt rebinding, scripted-marker rejection, fixture allowlisting, evidence-summary redaction, installed-CLI asset-root resolution, and real-agent TaskSpec input serialization.
+- `PYTHONPATH=src .venv/bin/python -m pytest -q`: **69 passed**, 0 failed; three upstream deprecation warnings. V2-specific tests include undeclared tools, out-of-order calls, duplicate completion, input drift, wrong terminal branch, green/blocked/recovery routes, fixture single-variable invariants, stable missing-item reason codes, API state, FunctionTool call IDs, real-receipt rebinding, scripted-marker rejection, fixture allowlisting, evidence-summary redaction, revision digest extraction, installed-CLI asset-root resolution, and real-agent TaskSpec input serialization.
 - Google Cloud CLI 581.0.0 is installed. The isolated project `proofbid-agentic-yys-260822` has billing and Vertex AI enabled; user auth and Vertex ADC are configured with this project as quota project.
 - Commit `7f183aa` passed real local `gemini-3.5-flash` + ADK FunctionTool execution for both public fixtures. Green reached `completed` with 1,650 tokens; blocked reached `blocked` with one `PROJECT_AUTHORIZATION_MISSING` item and 1,740 tokens. Both reported `google.gemini`, Vertex AI ADC, `STOP`, real invocation IDs, 10/10 unique non-null FunctionTool call IDs, no scripted marker, locked high-risk actions, and integrity-validated ZIPs. See `docs/evidence/2026-08-24-real-gemini-functiontools.md`.
+- Commit `704dbb6` is deployed in Cloud Run revision `proofbid-00002-jq7` with digest `sha256:17bbebcf2c3511b187279ee20cea9ec6359a6a6e763f66cfc0bbc056ce5c8aca`. Green task `task-1e219418489b4e1880f8` returned 202, ran Job execution `proofbid-agent-k2bfk`, called real `gemini-3.5-flash` through 10 ADK FunctionTools, reached `completed`, and delivered an integrity-validated ZIP. The Service download and GCS object both hash to `dd99b39ce8a9a007545d07b74d4e0e919a93c24c89a79f300532094422515c24`; build/revision, provider-manifest, FunctionTool IDs and five structured lifecycle log events reconcile. See `docs/evidence/cloud/task-1e219418489b4e1880f8.md`.
 - Three direct v2 routes: green `completed`, authorization case `blocked`, injected render failure recovered exactly once and `completed`; all artifact integrity gates passed.
 - `proofbid eval`: **50/50 passed** in about 22.7 seconds on one local synthetic run. This is not a P95 or production reliability claim.
 - `npm run build`: production React build passed.
@@ -42,8 +43,7 @@
 ## Evidence not yet obtained
 
 - The $150 Credits request is submitted and awaiting review; approval and redemption are not yet evidenced.
-- No Artifact Registry image, Cloud Run Service/Job, GCS bucket, Cloud Logging evidence, revision digest, execution ID, or public `.run.app` URL has been created or verified.
-- No green/blocked case has been run three times in Google Cloud; no cloud token/cost sample exists.
+- Only one post-fix green case has completed and reconciled in Google Cloud. The required totals of three green and three blocked cases, plus one real renderer-recovery route, are not yet complete; no aggregate cloud latency/cost sample exists.
 - Local commits exist and preserve the baseline/fix evidence chain. No public GitHub repository, remote push, submission tag, video, Devpost submission, or external success receipt exists.
 - Public-repository preflight passed for secrets, absolute user paths, tracked size, failure-injection exposure, license, IP disclosure and notices. GitHub publication remains blocked because the active `gh` token is invalid and the owner did not complete the device authorization before it expired.
 
@@ -56,11 +56,4 @@
 
 ## Unique NEXT
 
-The real-provider gate is complete. Next run `infra/cloud-shell-deploy.sh` and capture one real `complete_tender` Cloud Run Job end-to-end before opening the blocked fixture. Success requires all of the following in the same evidence chain:
-
-1. public Service returns 202 and records a real Cloud execution ID;
-2. Job reaches `completed` without a follow-up prompt;
-3. provider receipt identifies real `gemini-3.5-flash`, usage, finish reason and invocation ID;
-4. both readiness flags are `true`, high-risk actions remain locked, and bundle download passes;
-5. GCS hashes, Cloud revision/image digest and Cloud Logging timestamps are retained;
-6. repeat green and blocked cases three times each before recording latency/token/cost samples.
+The real-provider gate and first post-fix cloud-green closure are complete. Next keep the deployment green-only and capture two more independently reconciled `complete_tender` Cloud Run Job executions. Then open only `blocked_missing_authorization`, capture three blocked executions, and finally run one administrator-only renderer-recovery execution. Every run must retain task/execution IDs, provider receipt, FunctionTool IDs, terminal state, Service/GCS ZIP hash equality, revision/image digest and Cloud Logging timestamps before aggregate latency/token/cost reporting.

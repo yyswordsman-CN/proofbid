@@ -26,13 +26,18 @@
     "adc_verified": true,
     "project_created": true,
     "real_gemini_functiontools_verified": true,
-    "cloud_run_verified": false
+    "cloud_run_verified": true,
+    "verified_green_cloud_runs": 1,
+    "verified_blocked_cloud_runs": 0,
+    "verified_recovery_cloud_runs": 0,
+    "first_cloud_evidence": "docs/evidence/cloud/task-1e219418489b4e1880f8.json"
   },
   "claims_excluded": [
     "Credits approved",
     "Credits redeemed",
-    "Cloud Run deployed",
-    "Cloud Job completed",
+    "three green Cloud Jobs completed",
+    "three blocked Cloud Jobs completed",
+    "renderer recovery completed in Cloud",
     "public repository published",
     "video published",
     "Devpost submission completed"

@@ -10,12 +10,13 @@
 ## Runtime evidence
 
 - [x] Real `gemini-3.5-flash` provider evidence captured for local green and blocked FunctionTool routes.
+- [x] First post-fix green Cloud Run Job closure reconciled across revision/image digest, provider receipt, logs, GCS and Service ZIP.
 - [ ] Green case completed three times in Cloud Run Job.
 - [ ] Blocked case completed three times in Cloud Run Job.
 - [ ] One real legal recovery route captured.
 - [ ] Token, duration and cost samples labeled with sample size; no fake P95.
 - [ ] Service 202, polling, execution ID, GCS objects and ZIP download verified.
-- [ ] Cloud revision, container digest and relevant log timestamps saved.
+- [x] First green Cloud revision, container digest and relevant log timestamps saved; repeat-run matrix remains open.
 
 ## Repository
 
