@@ -27,17 +27,14 @@
     "project_created": true,
     "real_gemini_functiontools_verified": true,
     "cloud_run_verified": true,
-    "verified_green_cloud_runs": 1,
-    "verified_blocked_cloud_runs": 0,
-    "verified_recovery_cloud_runs": 0,
-    "first_cloud_evidence": "docs/evidence/cloud/task-1e219418489b4e1880f8.json"
+    "verified_green_cloud_runs": 3,
+    "verified_blocked_cloud_runs": 3,
+    "verified_recovery_cloud_runs": 1,
+    "cloud_closure_evidence": "docs/evidence/cloud/2026-08-24-verified-closure.json"
   },
   "claims_excluded": [
     "Credits approved",
     "Credits redeemed",
-    "three green Cloud Jobs completed",
-    "three blocked Cloud Jobs completed",
-    "renderer recovery completed in Cloud",
     "public repository published",
     "video published",
     "Devpost submission completed"

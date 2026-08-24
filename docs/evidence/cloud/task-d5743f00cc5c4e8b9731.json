@@ -1,0 +1,166 @@
+{
+  "agent": {
+    "function_call_ids": [
+      "call_3254626",
+      "call_299559",
+      "call_180852",
+      "call_180483",
+      "call_149616",
+      "call_150022",
+      "call_98695",
+      "call_168896",
+      "call_244654",
+      "call_171622"
+    ],
+    "status": "completed",
+    "tool_call_count": 10,
+    "tool_receipts_digest": "82e07084f4a47f66833ffb4330e255aaa4ebeb9049359d4dd21af2ef4c2f096a"
+  },
+  "collected_at": "2026-08-24T14:28:47.141948+00:00",
+  "gcs": {
+    "agent_run.json": {
+      "crc32c": null,
+      "generation": "1787581667375175",
+      "md5_hash": null,
+      "sha256": "bdfda9fc0e28af09308ad8c13ba451dee24f779f3130df42bb15a94a476c81fa",
+      "size": 1972
+    },
+    "manifest.json": {
+      "crc32c": null,
+      "generation": "1787581667866776",
+      "md5_hash": null,
+      "sha256": "77cb51040f1a1b192431da46904619ff7b7426d9e8c55829f4bc99dea05ccccc",
+      "size": 1868
+    },
+    "planner_receipt.json": {
+      "crc32c": null,
+      "generation": "1787581667118139",
+      "md5_hash": null,
+      "sha256": "4feca7d48418e69da7298eb9908f85ef858f110fa0bc25193c1dc74084df068e",
+      "size": 855
+    },
+    "proofbid_bundle.zip": {
+      "crc32c": null,
+      "generation": "1787581667973392",
+      "md5_hash": null,
+      "sha256": "5c33747bec9e7a1877ec97fa2b5aa817f37181261c0bcf37a0247c25a224baca",
+      "size": 78981
+    },
+    "tool_receipts.jsonl": {
+      "crc32c": null,
+      "generation": "1787581667279914",
+      "md5_hash": null,
+      "sha256": "659733ec5e371081d5a882e78f6313d7ed113a933c4e6139a89ade384c2dfd9c",
+      "size": 4295
+    }
+  },
+  "job": {
+    "completion_time": "2026-08-24T14:27:51.775378Z",
+    "execution": "projects/proofbid-agentic-yys-260822/locations/us-central1/jobs/proofbid-agent/executions/proofbid-agent-56lfh",
+    "name": "proofbid-agent",
+    "observed_name": "proofbid-agent-56lfh"
+  },
+  "logs": {
+    "events": [
+      {
+        "event": "delivery_ready",
+        "invocation_id": null,
+        "reason_code": null,
+        "severity": null,
+        "status": "completed",
+        "task_id": "task-d5743f00cc5c4e8b9731",
+        "timestamp": "2026-08-24T14:27:48.092321Z"
+      },
+      {
+        "event": "provider_completed",
+        "invocation_id": "e-a8973973-c581-4dae-af98-1739fc4fe0be",
+        "reason_code": null,
+        "severity": null,
+        "status": null,
+        "task_id": "task-d5743f00cc5c4e8b9731",
+        "timestamp": "2026-08-24T14:27:47.991055Z"
+      },
+      {
+        "event": "running",
+        "invocation_id": null,
+        "reason_code": null,
+        "severity": null,
+        "status": null,
+        "task_id": "task-d5743f00cc5c4e8b9731",
+        "timestamp": "2026-08-24T14:27:30.163987Z"
+      },
+      {
+        "event": "job_queued",
+        "invocation_id": null,
+        "reason_code": null,
+        "severity": null,
+        "status": null,
+        "task_id": "task-d5743f00cc5c4e8b9731",
+        "timestamp": "2026-08-24T14:25:54.620229Z"
+      },
+      {
+        "event": "accepted",
+        "invocation_id": null,
+        "reason_code": null,
+        "severity": null,
+        "status": null,
+        "task_id": "task-d5743f00cc5c4e8b9731",
+        "timestamp": "2026-08-24T14:25:54.265870Z"
+      }
+    ],
+    "query": "jsonPayload.task_id=\"task-d5743f00cc5c4e8b9731\" OR textPayload:\"task-d5743f00cc5c4e8b9731\""
+  },
+  "project": "proofbid-agentic-yys-260822",
+  "provider": {
+    "adk_version": "2.7.1",
+    "auth_mode": "vertex_ai",
+    "configured_model": "gemini-3.5-flash",
+    "duration_ms": 12944.102,
+    "event_count": 21,
+    "finish_reason": "STOP",
+    "genai_version": "2.18.1",
+    "interaction_id": null,
+    "invocation_id": "e-a8973973-c581-4dae-af98-1739fc4fe0be",
+    "model_version": "gemini-3.5-flash",
+    "output_tokens": 14,
+    "plan_digest": "65b19e4fbb8d72f62fdf2b62b90a2c6b799dcb9b80d5a7efdff5fef831a082ab",
+    "policy_validated": true,
+    "prompt_tokens": 1672,
+    "provider": "google.gemini",
+    "request_digest": "c9c65fa68898a9dd2f8c12e7e88105d2c7e89b47a58f88a1d51170888f17decf",
+    "response_digest": "13383f10c7b8a71f11d44ab6b07c851287494e666fc8e59c9757ff72930ad62b",
+    "schema_validated": true,
+    "schema_version": "proofbid.provider-receipt/v1",
+    "started_at": "2026-08-24T14:27:33.585450+00:00",
+    "total_tokens": 1705
+  },
+  "reconciliation": {
+    "all_function_call_ids_present": true,
+    "build_matches_revision_source": true,
+    "provider_download_sha256": "4feca7d48418e69da7298eb9908f85ef858f110fa0bc25193c1dc74084df068e",
+    "provider_hash_matches_manifest": true,
+    "provider_manifest_sha256": "4feca7d48418e69da7298eb9908f85ef858f110fa0bc25193c1dc74084df068e",
+    "revision_image_is_digest_pinned": true,
+    "service_zip_matches_gcs": true,
+    "service_zip_sha256": "5c33747bec9e7a1877ec97fa2b5aa817f37181261c0bcf37a0247c25a224baca",
+    "zip_sha256": "5c33747bec9e7a1877ec97fa2b5aa817f37181261c0bcf37a0247c25a224baca"
+  },
+  "region": "us-central1",
+  "schema_version": "proofbid.cloud-evidence/v1",
+  "service": {
+    "build_version": "704dbb6d7d7e8114f93bc0dfdf1f18df73267bfd",
+    "image": "us-central1-docker.pkg.dev/proofbid-agentic-yys-260822/proofbid/proofbid:704dbb6d7d7e8114f93bc0dfdf1f18df73267bfd",
+    "image_digest": "us-central1-docker.pkg.dev/proofbid-agentic-yys-260822/proofbid/proofbid@sha256:17bbebcf2c3511b187279ee20cea9ec6359a6a6e763f66cfc0bbc056ce5c8aca",
+    "name": "proofbid",
+    "revision": "proofbid-00002-jq7",
+    "url": "https://proofbid-um2t63h7ha-uc.a.run.app"
+  },
+  "task": {
+    "artifact_integrity_passed": true,
+    "blocking_reason_codes": [],
+    "build_version": "704dbb6d7d7e8114f93bc0dfdf1f18df73267bfd",
+    "missing_item_count": 0,
+    "status": "completed",
+    "task_id": "task-d5743f00cc5c4e8b9731"
+  }
+}

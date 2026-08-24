@@ -1,0 +1,50 @@
+{
+  "schema_version": "proofbid.cloud-closure/v1",
+  "observed_at": "2026-08-24",
+  "project": "proofbid-agentic-yys-260822",
+  "build_version": "704dbb6d7d7e8114f93bc0dfdf1f18df73267bfd",
+  "image_digest": "sha256:17bbebcf2c3511b187279ee20cea9ec6359a6a6e763f66cfc0bbc056ce5c8aca",
+  "provider": "google.gemini",
+  "auth_mode": "vertex_ai",
+  "model": "gemini-3.5-flash",
+  "verified_counts": {
+    "green": 3,
+    "blocked_missing_authorization": 3,
+    "renderer_recovery": 1
+  },
+  "green": {
+    "task_ids": [
+      "task-1e219418489b4e1880f8",
+      "task-cee9dba04a86452da569",
+      "task-d5743f00cc5c4e8b9731"
+    ],
+    "tokens": [1709, 1801, 1705],
+    "provider_duration_ms": [15364.958, 14370.531, 12944.102]
+  },
+  "blocked": {
+    "task_ids": [
+      "task-2587b40b985d4488807f",
+      "task-0eac9ab06e2d43f089a4",
+      "task-8c4af425b1ed443c9e4f"
+    ],
+    "missing_item_count_each": 1,
+    "missing_reason_code": "PROJECT_AUTHORIZATION_MISSING",
+    "tokens": [1736, 1804, 1741],
+    "provider_duration_ms": [15014.734, 15586.274, 16699.2]
+  },
+  "recovery": {
+    "task_id": "task-61cf08577c9b1605d41e",
+    "execution": "proofbid-agent-fd79q",
+    "failure_injected": true,
+    "first_failure_reason_code": "RENDER_TRANSIENT",
+    "retry_tool": "retry_render",
+    "retry_count": 1,
+    "terminal_status": "completed",
+    "tokens": 1757,
+    "provider_duration_ms": 19646.696
+  },
+  "all_reconciliation_gates_passed": true,
+  "credits_approval_excluded": true,
+  "public_repository_excluded": true,
+  "video_and_submission_excluded": true
+}

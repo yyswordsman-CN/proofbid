@@ -1,6 +1,6 @@
 # ProofBid Architecture
 
-> 2026-08-24 implementation snapshot. Cloud components are deployed and one post-fix green Service/Job/GCS execution has been reconciled; the three-green/three-blocked/recovery cloud matrix remains open.
+> 2026-08-24 implementation snapshot. Cloud components are deployed and three green, three blocked, and one administrator recovery Service/Job/GCS execution have been independently reconciled.
 
 Canonical presentation assets: [Mermaid source](architecture/proofbid-google-cloud.mmd), [SVG](architecture/proofbid-google-cloud.svg), and [1920×1080 PNG](architecture/proofbid-google-cloud-1920x1080.png). They are generated with pinned Mermaid CLI 11.16.0 through `infra/render-architecture.sh`.
 
@@ -115,6 +115,6 @@ The repository intentionally does not add Firestore, Pub/Sub, PDF/OCR, arbitrary
 
 ## Current evidence boundary
 
-Verified: deterministic baseline, green/blocked/recovery local v2 routes, real ADK FunctionTool execution through Vertex AI ADC, state/receipt/digest gates, API event-to-download flow, React production build, desktop/mobile Chromium checks, a 50-case synthetic local Eval, and one green Cloud Run Service → Job → Gemini → GCS → ZIP closure with digest/log reconciliation.
+Verified: deterministic baseline, green/blocked/recovery local v2 routes, real ADK FunctionTool execution through Vertex AI ADC, state/receipt/digest gates, API event-to-download flow, React production build, desktop/mobile Chromium checks, a 50-case synthetic local Eval, and a three-green/three-blocked/one-recovery Cloud Run Service/Job/Gemini/GCS matrix with digest/log reconciliation.
 
-Not yet verified: three green and three blocked Cloud Jobs, a real cloud renderer-recovery execution, aggregate cloud latency/cost, public HTTPS clean clone, video, tag, or final Devpost submission.
+Not yet verified: attributed Google Cloud cost, public HTTPS clean clone, video, tag, or final Devpost submission.

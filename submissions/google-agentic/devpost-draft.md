@@ -58,5 +58,5 @@ After the competition demo, the next product step is versioned public-document p
 - Demo: `[PUBLIC_RUN_APP_URL]`
 - Video: `[PUBLIC_YOUTUBE_OR_VIMEO_URL]`
 - Commit/tag: `[GIT_COMMIT_AND_TAG]`
-- Cloud revision/image digest: `[VERIFIED_DIGESTS]`
-- Real Gemini/Cloud execution evidence: `[EVIDENCE_PATH_OR_SCREEN]`
+- Cloud revisions: `proofbid-00002-jq7` (green-only) and `proofbid-00003-kdd` (two-fixture); image digest `sha256:17bbebcf2c3511b187279ee20cea9ec6359a6a6e763f66cfc0bbc056ce5c8aca`
+- Real Gemini/Cloud execution evidence: `docs/evidence/cloud/2026-08-24-verified-closure.md`
