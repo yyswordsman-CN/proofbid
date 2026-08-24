@@ -25,6 +25,14 @@ BUILD_VERSION = os.getenv("PROOFBID_BUILD_VERSION", "dev")
 TERMINAL_STATUSES = {"completed", "blocked", "failed"}
 
 
+def _external_url(request: Request, route_name: str, **path_params: str) -> str:
+    url = request.url_for(route_name, **path_params)
+    forwarded_proto = request.headers.get("x-forwarded-proto", "").casefold()
+    if forwarded_proto in {"http", "https"}:
+        url = url.replace(scheme=forwarded_proto)
+    return str(url)
+
+
 class TaskCreateRequest(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
@@ -53,9 +61,9 @@ class DemoQuota:
 def _public_state(state_payload: dict[str, Any], request: Request) -> dict[str, Any]:
     task_id = str(state_payload["task_id"])
     payload = dict(state_payload)
-    payload["status_url"] = str(request.url_for("get_task", task_id=task_id))
+    payload["status_url"] = _external_url(request, "get_task", task_id=task_id)
     payload["bundle_url"] = (
-        str(request.url_for("get_bundle", task_id=task_id))
+        _external_url(request, "get_bundle", task_id=task_id)
         if state_payload.get("bundle_ready")
         else None
     )
@@ -84,6 +92,8 @@ def create_app(store: TaskStore | None = None) -> FastAPI:
                 google_agent=os.getenv("PROOFBID_LOCAL_AGENT_MODE", "scripted") == "google",
             )
 
+    @app.get("/api/v1/healthz", include_in_schema=False)
+    @app.get("/healthz/", include_in_schema=False)
     @app.get("/healthz", name="healthz")
     def healthz() -> dict[str, Any]:
         return {
@@ -161,7 +171,7 @@ def create_app(store: TaskStore | None = None) -> FastAPI:
             background_tasks.add_task(run_local_task, task_id, fixture_id)
         return {
             "task_id": task_id,
-            "status_url": str(request.url_for("get_task", task_id=task_id)),
+            "status_url": _external_url(request, "get_task", task_id=task_id),
         }
 
     @app.get("/api/v1/tasks/{task_id}", name="get_task")

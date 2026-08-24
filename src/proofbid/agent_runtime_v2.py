@@ -775,11 +775,12 @@ def run_scripted_agent_pipeline(
     output_dir: str | Path,
     *,
     inject_render_failure: bool = False,
+    task_id: str | None = None,
 ) -> dict[str, Any]:
     """Run the same bounded tool runtime with a deterministic local route policy."""
 
     assert_output_target_available(output_dir)
-    task_id = new_task_id()
+    task_id = task_id or new_task_id()
     documents = scan_workspace(Path(workspace), REQUIRED_INPUTS)
     task_spec = build_task_spec(task_id, documents)
     planning_result = _local_planning_result(task_spec)

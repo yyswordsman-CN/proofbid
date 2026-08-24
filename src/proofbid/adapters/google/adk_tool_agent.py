@@ -80,6 +80,7 @@ async def run_google_tool_agent_pipeline_async(
     *,
     model: str | None = None,
     inject_render_failure: bool = False,
+    task_id: str | None = None,
 ) -> dict[str, Any]:
     """Run a real Gemini + ADK FunctionTool task to a deterministic terminal state."""
 
@@ -94,7 +95,7 @@ async def run_google_tool_agent_pipeline_async(
         raise AgentRuntimeError("Install the ProofBid google extra before google-agent-run") from exc
 
     assert_output_target_available(output_dir)
-    task_id = new_task_id()
+    task_id = task_id or new_task_id()
     documents = scan_workspace(Path(workspace), REQUIRED_INPUTS)
     task_spec = build_task_spec(task_id, documents)
     runtime = TaskRuntime(
@@ -217,6 +218,7 @@ def run_google_tool_agent_pipeline(
     *,
     model: str | None = None,
     inject_render_failure: bool = False,
+    task_id: str | None = None,
 ) -> dict[str, Any]:
     try:
         asyncio.get_running_loop()
@@ -227,6 +229,7 @@ def run_google_tool_agent_pipeline(
                 output_dir,
                 model=model,
                 inject_render_failure=inject_render_failure,
+                task_id=task_id,
             )
         )
     raise AgentRuntimeError("Use the async entrypoint inside an active event loop")

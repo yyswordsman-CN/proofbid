@@ -86,12 +86,14 @@ def execute_task(
                     fixture_workspace(fixture_id),
                     output,
                     inject_render_failure=inject_render_failure,
+                    task_id=task_id,
                 )
             else:
                 result = run_scripted_agent_pipeline(
                     fixture_workspace(fixture_id),
                     output,
                     inject_render_failure=inject_render_failure,
+                    task_id=task_id,
                 )
             for path in output.iterdir():
                 if path.is_file():

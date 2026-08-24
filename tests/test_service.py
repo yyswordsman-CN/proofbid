@@ -26,9 +26,10 @@ def test_task_api_accepts_polls_and_downloads_validated_bundle(tmp_path: Path) -
         task = client.get(f"/api/v1/tasks/{payload['task_id']}")
         assert task.status_code == 200
         state = task.json()
+        assert state["task_id"] == payload["task_id"]
         assert state["status"] == "completed"
         assert state["ready_for_submission"] is True
-        assert state["bundle_url"]
+        assert state["bundle_url"].endswith(f"{payload['task_id']}/bundle")
 
         bundle = client.get(f"/api/v1/tasks/{payload['task_id']}/bundle")
         assert bundle.status_code == 200
@@ -83,6 +84,26 @@ def test_health_does_not_run_agent(tmp_path: Path) -> None:
     assert response.status_code == 200
     assert response.json()["status"] == "ok"
     assert list((tmp_path / "tasks").iterdir()) == []
+
+
+def test_health_alias_and_forwarded_https_urls(tmp_path: Path) -> None:
+    with _client(tmp_path) as client:
+        health = client.get("/healthz/")
+        created = client.post(
+            "/api/v1/tasks",
+            json={"fixture_id": "complete_tender"},
+            headers={"x-forwarded-proto": "https"},
+        )
+        task_id = created.json()["task_id"]
+        state = client.get(
+            f"/api/v1/tasks/{task_id}",
+            headers={"x-forwarded-proto": "https"},
+        ).json()
+
+    assert health.status_code == 200
+    assert created.json()["status_url"].startswith("https://")
+    assert state["status_url"].startswith("https://")
+    assert state["bundle_url"].startswith("https://")
 
 
 def test_fixture_allowlist_can_hold_public_api_to_green_only(
