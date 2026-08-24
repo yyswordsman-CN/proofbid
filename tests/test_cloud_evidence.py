@@ -35,8 +35,24 @@ def test_cloud_evidence_helpers_extract_revision_binding_and_redact_logs() -> No
     assert _service_image(service).endswith("@sha256:abc")
     assert _service_environment(service)["PROOFBID_BUILD_VERSION"] == "a" * 40
 
+    revision = {
+        "spec": {
+            "containers": [
+                {
+                    "image": "us-docker.pkg.dev/example/proofbid@sha256:def",
+                }
+            ]
+        }
+    }
+    assert _service_image(revision).endswith("@sha256:def")
+
     sanitized = _sanitized_logs(
         [
+            {
+                "timestamp": "2026-08-22T00:00:00Z",
+                "severity": "INFO",
+                "textPayload": "unstructured platform log",
+            },
             {
                 "timestamp": "2026-08-22T00:00:00Z",
                 "severity": "INFO",
@@ -49,5 +65,6 @@ def test_cloud_evidence_helpers_extract_revision_binding_and_redact_logs() -> No
             }
         ]
     )
+    assert len(sanitized) == 1
     assert sanitized[0]["event"] == "provider_completed"
     assert "source_text" not in sanitized[0]

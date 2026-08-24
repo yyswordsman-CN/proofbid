@@ -58,7 +58,11 @@ def _nested(payload: dict[str, Any], *path: str) -> Any:
 
 
 def _service_image(service: dict[str, Any]) -> str | None:
-    containers = _nested(service, "spec", "template", "spec", "containers") or []
+    containers = (
+        _nested(service, "spec", "containers")
+        or _nested(service, "spec", "template", "spec", "containers")
+        or []
+    )
     return str(containers[0].get("image")) if containers else None
 
 
@@ -78,6 +82,8 @@ def _sanitized_logs(rows: list[Any]) -> list[dict[str, Any]]:
         if not isinstance(row, dict):
             continue
         payload = row.get("jsonPayload") if isinstance(row.get("jsonPayload"), dict) else {}
+        if not payload.get("event") and not payload.get("task_id"):
+            continue
         sanitized.append(
             {
                 "timestamp": row.get("timestamp"),
@@ -104,6 +110,11 @@ def _fetch_json(url: str) -> dict[str, Any]:
     return payload
 
 
+def _fetch_bytes(url: str) -> bytes:
+    with urllib.request.urlopen(url, timeout=30) as response:
+        return response.read()
+
+
 def collect(args: argparse.Namespace) -> dict[str, Any]:
     task_id = validate_task_id(args.task_id)
     raw_dir = Path(args.raw_dir).expanduser().resolve() / task_id
@@ -117,6 +128,13 @@ def collect(args: argparse.Namespace) -> dict[str, Any]:
     service_url = str(_nested(service, "status", "url") or "")
     revision = str(_nested(service, "status", "latestReadyRevisionName") or "")
     image = _service_image(service)
+    revision_payload = _run_json(
+        [
+            "gcloud", "run", "revisions", "describe", revision,
+            "--project", args.project, "--region", args.region, "--format=json",
+        ]
+    )
+    image_digest = _service_image(revision_payload)
     service_environment = _service_environment(service)
     execution_id = args.execution.rsplit("/", 1)[-1]
     execution = _run_json(
@@ -126,6 +144,11 @@ def collect(args: argparse.Namespace) -> dict[str, Any]:
         ]
     )
     task_state = _fetch_json(_task_url(service_url, task_id))
+    bundle_url = str(
+        task_state.get("bundle_url")
+        or f"{_task_url(service_url, task_id)}/bundle"
+    )
+    service_bundle = _fetch_bytes(bundle_url)
 
     raw_payloads: dict[str, bytes] = {}
     metadata: dict[str, Any] = {}
@@ -155,9 +178,13 @@ def collect(args: argparse.Namespace) -> dict[str, Any]:
         ]
     )
     (raw_dir / "service.json").write_text(json.dumps(service, indent=2), encoding="utf-8")
+    (raw_dir / "revision.json").write_text(
+        json.dumps(revision_payload, indent=2), encoding="utf-8"
+    )
     (raw_dir / "execution.json").write_text(json.dumps(execution, indent=2), encoding="utf-8")
     (raw_dir / "task-state.json").write_text(json.dumps(task_state, indent=2), encoding="utf-8")
     (raw_dir / "logs.json").write_text(json.dumps(logs, indent=2), encoding="utf-8")
+    (raw_dir / "service-download.zip").write_bytes(service_bundle)
 
     manifest_files = {
         row.get("path"): row for row in manifest.get("files", []) if isinstance(row, dict)
@@ -176,6 +203,7 @@ def collect(args: argparse.Namespace) -> dict[str, Any]:
             "url": service_url,
             "revision": revision,
             "image": image,
+            "image_digest": image_digest,
             "build_version": service_environment.get("PROOFBID_BUILD_VERSION"),
         },
         "job": {
@@ -214,10 +242,14 @@ def collect(args: argparse.Namespace) -> dict[str, Any]:
             "provider_download_sha256": provider_sha,
             "provider_hash_matches_manifest": provider_manifest.get("sha256") == provider_sha,
             "zip_sha256": zip_sha,
+            "service_zip_sha256": _sha256(service_bundle),
+            "service_zip_matches_gcs": _sha256(service_bundle) == zip_sha,
             "all_function_call_ids_present": bool(function_call_ids) and all(function_call_ids),
             "build_matches_revision_source": bool(task_state.get("build_version"))
             and task_state.get("build_version")
             == service_environment.get("PROOFBID_BUILD_VERSION"),
+            "revision_image_is_digest_pinned": bool(image_digest)
+            and "@sha256:" in str(image_digest),
         },
         "logs": {
             "query": log_query,
@@ -229,8 +261,10 @@ def collect(args: argparse.Namespace) -> dict[str, Any]:
     required_checks = (
         summary["task"]["artifact_integrity_passed"] is True,
         summary["reconciliation"]["provider_hash_matches_manifest"] is True,
+        summary["reconciliation"]["service_zip_matches_gcs"] is True,
         summary["reconciliation"]["all_function_call_ids_present"] is True,
         summary["reconciliation"]["build_matches_revision_source"] is True,
+        summary["reconciliation"]["revision_image_is_digest_pinned"] is True,
     )
     if not all(required_checks):
         raise RuntimeError("Cloud evidence reconciliation failed")
@@ -250,6 +284,7 @@ def _markdown(summary: dict[str, Any]) -> str:
             f"- Service URL: `{service['url']}`",
             f"- Revision: `{service['revision']}`",
             f"- Image: `{service['image']}`",
+            f"- Image digest: `{service['image_digest']}`",
             f"- Job execution: `{job['execution']}`",
             f"- Task status: `{task['status']}`",
             f"- Build version: `{task['build_version']}`",
@@ -257,6 +292,7 @@ def _markdown(summary: dict[str, Any]) -> str:
             f"- Invocation ID: `{provider.get('invocation_id')}`",
             f"- Usage: prompt `{provider.get('prompt_tokens')}`, output `{provider.get('output_tokens')}`, total `{provider.get('total_tokens')}`",
             f"- ZIP SHA-256: `{reconcile['zip_sha256']}`",
+            f"- Service ZIP matches GCS: `{reconcile['service_zip_matches_gcs']}`",
             f"- Provider manifest hash reconciled: `{reconcile['provider_hash_matches_manifest']}`",
             f"- All FunctionTool call IDs present: `{reconcile['all_function_call_ids_present']}`",
             "",
