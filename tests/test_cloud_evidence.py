@@ -1,6 +1,11 @@
 from __future__ import annotations
 
-from proofbid.cloud_evidence import _sanitized_logs, _service_environment, _service_image
+from proofbid.cloud_evidence import (
+    _execution_environment,
+    _sanitized_logs,
+    _service_environment,
+    _service_image,
+)
 from proofbid.task_worker import allowed_fixture_ids
 
 
@@ -45,6 +50,24 @@ def test_cloud_evidence_helpers_extract_revision_binding_and_redact_logs() -> No
         }
     }
     assert _service_image(revision).endswith("@sha256:def")
+
+    execution = {
+        "spec": {
+            "template": {
+                "spec": {
+                    "containers": [
+                        {
+                            "env": [
+                                {"name": "PROOFBID_BUILD_VERSION", "value": "b" * 40},
+                                {"name": "PROOFBID_INJECT_RENDER_FAILURE", "value": "1"},
+                            ]
+                        }
+                    ]
+                }
+            }
+        }
+    }
+    assert _execution_environment(execution)["PROOFBID_BUILD_VERSION"] == "b" * 40
 
     sanitized = _sanitized_logs(
         [

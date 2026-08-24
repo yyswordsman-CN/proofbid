@@ -76,6 +76,16 @@ def _service_environment(service: dict[str, Any]) -> dict[str, str]:
     }
 
 
+def _execution_environment(execution: dict[str, Any]) -> dict[str, str]:
+    containers = _nested(execution, "spec", "template", "spec", "containers") or []
+    rows = containers[0].get("env", []) if containers else []
+    return {
+        str(row.get("name")): str(row.get("value"))
+        for row in rows
+        if isinstance(row, dict) and row.get("name") and row.get("value") is not None
+    }
+
+
 def _sanitized_logs(rows: list[Any]) -> list[dict[str, Any]]:
     sanitized: list[dict[str, Any]] = []
     for row in rows:
@@ -143,6 +153,7 @@ def collect(args: argparse.Namespace) -> dict[str, Any]:
             "--project", args.project, "--region", args.region, "--format=json",
         ]
     )
+    execution_environment = _execution_environment(execution)
     task_state = _fetch_json(_task_url(service_url, task_id))
     bundle_url = str(
         task_state.get("bundle_url")
@@ -193,6 +204,18 @@ def collect(args: argparse.Namespace) -> dict[str, Any]:
     zip_sha = _sha256(raw_payloads["proofbid_bundle.zip"])
     provider_sha = _sha256(raw_payloads["planner_receipt.json"])
     function_call_ids = [row.get("function_call_id") for row in tool_receipts]
+    task_build_version = (
+        task_state.get("build_version")
+        or execution_environment.get("PROOFBID_BUILD_VERSION")
+    )
+    recovery_receipts = [
+        {
+            key: row.get(key)
+            for key in ("sequence", "tool", "status", "reason_code", "retry_of")
+        }
+        for row in tool_receipts
+        if row.get("status") != "completed" or row.get("tool") == "retry_render"
+    ]
     summary = {
         "schema_version": "proofbid.cloud-evidence/v1",
         "collected_at": datetime.now(UTC).isoformat(),
@@ -211,11 +234,14 @@ def collect(args: argparse.Namespace) -> dict[str, Any]:
             "execution": args.execution,
             "observed_name": _nested(execution, "metadata", "name"),
             "completion_time": _nested(execution, "status", "completionTime"),
+            "fixture_id": execution_environment.get("PROOFBID_FIXTURE_ID"),
+            "render_failure_injected":
+                execution_environment.get("PROOFBID_INJECT_RENDER_FAILURE") == "1",
         },
         "task": {
             "task_id": task_id,
             "status": task_state.get("status"),
-            "build_version": task_state.get("build_version"),
+            "build_version": task_build_version,
             "artifact_integrity_passed": task_state.get("artifact_integrity_passed"),
             "missing_item_count": task_state.get("missing_item_count"),
             "blocking_reason_codes": task_state.get("blocking_reason_codes"),
@@ -226,6 +252,7 @@ def collect(args: argparse.Namespace) -> dict[str, Any]:
             "tool_call_count": agent_run.get("tool_call_count"),
             "tool_receipts_digest": agent_run.get("tool_receipts_digest"),
             "function_call_ids": function_call_ids,
+            "recovery_receipts": recovery_receipts,
         },
         "gcs": {
             name: {
@@ -245,9 +272,10 @@ def collect(args: argparse.Namespace) -> dict[str, Any]:
             "service_zip_sha256": _sha256(service_bundle),
             "service_zip_matches_gcs": _sha256(service_bundle) == zip_sha,
             "all_function_call_ids_present": bool(function_call_ids) and all(function_call_ids),
-            "build_matches_revision_source": bool(task_state.get("build_version"))
-            and task_state.get("build_version")
-            == service_environment.get("PROOFBID_BUILD_VERSION"),
+            "build_matches_revision_source": bool(task_build_version)
+            and task_build_version == service_environment.get("PROOFBID_BUILD_VERSION")
+            and task_build_version
+            == execution_environment.get("PROOFBID_BUILD_VERSION"),
             "revision_image_is_digest_pinned": bool(image_digest)
             and "@sha256:" in str(image_digest),
         },
@@ -277,8 +305,7 @@ def _markdown(summary: dict[str, Any]) -> str:
     service = summary["service"]
     job = summary["job"]
     reconcile = summary["reconciliation"]
-    return "\n".join(
-        (
+    lines = [
             f"# ProofBid Google Cloud evidence — {task['task_id']}",
             "",
             f"- Service URL: `{service['url']}`",
@@ -295,11 +322,16 @@ def _markdown(summary: dict[str, Any]) -> str:
             f"- Service ZIP matches GCS: `{reconcile['service_zip_matches_gcs']}`",
             f"- Provider manifest hash reconciled: `{reconcile['provider_hash_matches_manifest']}`",
             f"- All FunctionTool call IDs present: `{reconcile['all_function_call_ids_present']}`",
-            "",
-            f"Cloud Logging query: `{summary['logs']['query']}`",
-            "",
+    ]
+    if job.get("render_failure_injected"):
+        lines.extend(
+            (
+                "- Administrator renderer failure injected: `True`",
+                f"- Recovery receipts: `{json.dumps(summary['agent']['recovery_receipts'], ensure_ascii=False)}`",
+            )
         )
-    )
+    lines.extend(("", f"Cloud Logging query: `{summary['logs']['query']}`", ""))
+    return "\n".join(lines)
 
 
 def _parser() -> argparse.ArgumentParser:
