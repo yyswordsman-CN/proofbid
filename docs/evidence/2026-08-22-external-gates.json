@@ -1,6 +1,6 @@
 {
   "schema_version": "proofbid.external-gates/v1",
-  "observed_at": "2026-08-24T13:57:39Z",
+  "observed_at": "2026-08-24T15:00:38Z",
   "devpost": {
     "authentication": "complete",
     "join_status": "joined",
@@ -32,11 +32,20 @@
     "verified_recovery_cloud_runs": 1,
     "cloud_closure_evidence": "docs/evidence/cloud/2026-08-24-verified-closure.json"
   },
+  "github": {
+    "authentication": "complete",
+    "repository_url": "https://github.com/yyswordsman-CN/proofbid",
+    "visibility": "PUBLIC",
+    "default_branch": "main",
+    "pushed_commit": "dc9d7561b5700e096341d6f78d12c45e25341fb4",
+    "public_https_clean_clone_verified": true,
+    "evidence": "docs/evidence/2026-08-24-public-clean-clone.json"
+  },
   "claims_excluded": [
     "Credits approved",
     "Credits redeemed",
-    "public repository published",
     "video published",
+    "submission tag created",
     "Devpost submission completed"
   ]
 }

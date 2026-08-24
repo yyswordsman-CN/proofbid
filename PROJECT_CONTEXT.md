@@ -37,15 +37,14 @@
 - `bash -n infra/cloud-shell-deploy.sh`: passed.
 - `docker build -t proofbid:local .`: multi-stage image built successfully after transient registry retries.
 - The non-root built image ran the complete tender through Agent v2 and returned `completed`, both readiness flags `true`, 10 tool calls, and artifact integrity passed.
-- A fresh local Git clone of commit `97da579` passed Python 3.12.13 dependency installation, 67 tests, 50/50 Eval, Node 22.22.3 install/build, 6/6 Playwright, Workbench health/202/poll/download, Docker build, and a non-root container green route. The first attempt exposed and led to fixing installed-CLI asset-root resolution. Public HTTPS clone verification remains pending.
+- A fresh public HTTPS clone of `https://github.com/yyswordsman-CN/proofbid.git` at commit `dc9d756` passed Python 3.12.13 dependency installation, 69 tests, 50/50 Eval, Node 22.22.3 install/build, 6/6 Playwright, Workbench health/202/poll/download, Docker build, ZIP integrity, a non-root container green route, and the final clean-worktree gate. See `docs/evidence/2026-08-24-public-clean-clone.md`.
 - Repository scan found no populated API keys/private keys, user name, or absolute local project path.
 
 ## Evidence not yet obtained
 
 - The $150 Credits request is submitted and awaiting review; approval and redemption are not yet evidenced.
 - Seven verified cloud observations provide token and provider-duration samples, but no production P95 or attributed Google Cloud cost claim has been made.
-- Local commits exist and preserve the baseline/fix evidence chain. No public GitHub repository, remote push, submission tag, video, Devpost submission, or external success receipt exists.
-- Public-repository preflight passed for secrets, absolute user paths, tracked size, failure-injection exposure, license, IP disclosure and notices. GitHub publication remains blocked because the active `gh` token is invalid and the owner did not complete the device authorization before it expired.
+- The public repository exists at `https://github.com/yyswordsman-CN/proofbid`; `main` is pushed and public HTTPS clean-clone verification passed. No submission tag, video, Devpost submission, or final submission receipt exists.
 
 ## Locked scope
 
@@ -56,4 +55,4 @@
 
 ## Unique NEXT
 
-The real-provider and cloud execution matrix gates are complete. Next repair GitHub CLI authentication, create the public `yyswordsman-CN/proofbid` repository, push the evidence commits, and run the existing clean-clone verifier from the public HTTPS URL. Do not tag, publish video, or submit Devpost until that public-clone gate passes and Credits status is rechecked.
+The real-provider, cloud execution matrix and public HTTPS clean-clone gates are complete. Next perform one uncut 3:55 video rehearsal using the public Workbench, one green cloud execution, the single-authorization blocked result, provider/FunctionTool receipts, Cloud Run/Logging/GCS proof and an opened ZIP. Do not create the final tag or submit Devpost until the rehearsal is reviewed and Credits status is rechecked.

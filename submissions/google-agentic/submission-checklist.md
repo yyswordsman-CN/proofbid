@@ -15,17 +15,17 @@
 - [x] Blocked case completed three times in Cloud Run Job.
 - [x] One real legal recovery route captured.
 - [ ] Token, duration and cost samples labeled with sample size; no fake P95.
-- [ ] Service 202, polling, execution ID, GCS objects and ZIP download verified.
-- [x] First green Cloud revision, container digest and relevant log timestamps saved; repeat-run matrix remains open.
+- [x] Service 202, polling, execution ID, GCS objects and ZIP download verified.
+- [x] Cloud revisions, container digest and relevant log timestamps saved for the complete run matrix.
 
 ## Repository
 
-- [ ] No secret, real customer data, user path, build output or unrelated project asset.
-- [ ] Public HTTPS clean clone passes `infra/verify-clean-clone.sh` with Python 3.12 and Node 22.
-- [ ] Apache-2.0, notices, IP disclosure and architecture diagram present.
-- [ ] Python tests, frontend build, Playwright and 50-case Eval rerun on freeze commit.
-- [ ] Docker build/container green route and Workbench health/202/poll/download pass from that clone.
-- [ ] English architecture SVG and exact 1920×1080 PNG regenerated with Mermaid CLI 11.16.0.
+- [x] No secret, real customer data, user path, build output or unrelated project asset.
+- [x] Public HTTPS clean clone passes `infra/verify-clean-clone.sh` with Python 3.12 and Node 22.
+- [x] Apache-2.0, notices, IP disclosure and architecture diagram present.
+- [x] Python tests, frontend build, Playwright and 50-case Eval rerun from the public clone.
+- [x] Docker build/container green route and Workbench health/202/poll/download pass from that clone.
+- [x] English architecture SVG and exact 1920×1080 PNG regenerated with Mermaid CLI 11.16.0.
 - [ ] Git commit/tag and source archive hash saved.
 
 ## Demo and submission

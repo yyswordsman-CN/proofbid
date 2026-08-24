@@ -6,7 +6,7 @@ Audited commit: `c98c2c9f8d8859933400313e53e87124211934f6`.
 
 - Worktree was clean before the audit.
 - 108 tracked files, 867,350 total tracked bytes; largest tracked file was the 202,120-byte architecture PNG. No tracked file exceeded 2 MiB.
-- No tracked Google API key pattern, OAuth token prefix, private-key header, or `/Users/yangzhiyi` absolute path was found.
+- No tracked Google API key pattern, OAuth token prefix, private-key header, or absolute user-home path was found.
 - `.env`, build output, Node dependencies, and raw cloud-evidence downloads are ignored.
 - No public UI/API control exposes `PROOFBID_INJECT_RENDER_FAILURE`.
 - Apache-2.0 `LICENSE`, `PREEXISTING_IP.md`, and `THIRD_PARTY_NOTICES.md` are present.

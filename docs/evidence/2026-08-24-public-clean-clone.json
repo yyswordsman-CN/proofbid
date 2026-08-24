@@ -1,0 +1,44 @@
+{
+  "schema_version": "proofbid.public-clean-clone/v1",
+  "observed_at": "2026-08-24T15:00:38Z",
+  "repository": {
+    "url": "https://github.com/yyswordsman-CN/proofbid",
+    "clone_url": "https://github.com/yyswordsman-CN/proofbid.git",
+    "visibility": "PUBLIC",
+    "default_branch": "main",
+    "commit": "dc9d7561b5700e096341d6f78d12c45e25341fb4"
+  },
+  "runtime": {
+    "python": "3.12.13",
+    "node": "22.22.3"
+  },
+  "gates": {
+    "python_tests_passed": 69,
+    "python_tests_failed": 0,
+    "eval_passed": 50,
+    "eval_total": 50,
+    "frontend_build": "passed",
+    "playwright_passed": 6,
+    "playwright_total": 6,
+    "workbench_health": "passed",
+    "workbench_post_poll_download": "passed",
+    "zip_integrity": "passed",
+    "docker_build": "passed",
+    "container_green_route": "passed",
+    "clone_worktree_clean": true
+  },
+  "workbench_task_id": "task-395ee5db4348478088c9",
+  "docker": {
+    "tag": "proofbid:clean-dc9d7561b570",
+    "image_id": "sha256:d7b5f54752b0b6b86c8c0b537ac95b6c93321fab72a5785e93b7094a65c4d5d6",
+    "os": "linux",
+    "architecture": "arm64"
+  },
+  "claims_excluded": [
+    "real Gemini from the clean-clone container route",
+    "Credits approved",
+    "video published",
+    "submission tag created",
+    "Devpost submission completed"
+  ]
+}
