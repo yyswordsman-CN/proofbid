@@ -1,6 +1,6 @@
 # PROJECT_CONTEXT — ProofBid
 
-> Last updated: 2026-08-22
+> Last updated: 2026-08-24
 
 ## Current implementation
 
@@ -25,7 +25,9 @@
 
 ## Verification completed in this workspace
 
-- `PYTHONPATH=src .venv/bin/python -m pytest -q`: **67 passed**, 0 failed; three upstream deprecation warnings. V2-specific tests include undeclared tools, out-of-order calls, duplicate completion, input drift, wrong terminal branch, green/blocked/recovery routes, fixture single-variable invariants, stable missing-item reason codes, API state, FunctionTool call IDs, real-receipt rebinding, scripted-marker rejection, fixture allowlisting, evidence-summary redaction, and installed-CLI asset-root resolution.
+- `PYTHONPATH=src .venv/bin/python -m pytest -q`: **68 passed**, 0 failed; three upstream deprecation warnings. V2-specific tests include undeclared tools, out-of-order calls, duplicate completion, input drift, wrong terminal branch, green/blocked/recovery routes, fixture single-variable invariants, stable missing-item reason codes, API state, FunctionTool call IDs, real-receipt rebinding, scripted-marker rejection, fixture allowlisting, evidence-summary redaction, installed-CLI asset-root resolution, and real-agent TaskSpec input serialization.
+- Google Cloud CLI 581.0.0 is installed. The isolated project `proofbid-agentic-yys-260822` has billing and Vertex AI enabled; user auth and Vertex ADC are configured with this project as quota project.
+- Commit `7f183aa` passed real local `gemini-3.5-flash` + ADK FunctionTool execution for both public fixtures. Green reached `completed` with 1,650 tokens; blocked reached `blocked` with one `PROJECT_AUTHORIZATION_MISSING` item and 1,740 tokens. Both reported `google.gemini`, Vertex AI ADC, `STOP`, real invocation IDs, 10/10 unique non-null FunctionTool call IDs, no scripted marker, locked high-risk actions, and integrity-validated ZIPs. See `docs/evidence/2026-08-24-real-gemini-functiontools.md`.
 - Three direct v2 routes: green `completed`, authorization case `blocked`, injected render failure recovered exactly once and `completed`; all artifact integrity gates passed.
 - `proofbid eval`: **50/50 passed** in about 22.7 seconds on one local synthetic run. This is not a P95 or production reliability claim.
 - `npm run build`: production React build passed.
@@ -39,8 +41,8 @@
 
 ## Evidence not yet obtained
 
-- No authorized Gemini credential or Vertex AI ADC project is configured in this workspace. `google-agent-run` code and FunctionTools are locally validated, but no real `gemini-3.5-flash` provider event, usage, finish reason, or invocation ID has been captured.
-- No isolated Google Cloud project, billing/Credits result, Artifact Registry image, Cloud Run Service/Job, GCS bucket, Cloud Logging evidence, revision digest, execution ID, or public `.run.app` URL has been created or verified.
+- The $150 Credits request is submitted and awaiting review; approval and redemption are not yet evidenced.
+- No Artifact Registry image, Cloud Run Service/Job, GCS bucket, Cloud Logging evidence, revision digest, execution ID, or public `.run.app` URL has been created or verified.
 - No green/blocked case has been run three times in Google Cloud; no cloud token/cost sample exists.
 - Local commits exist and preserve the baseline/fix evidence chain. No public GitHub repository, remote push, submission tag, video, Devpost submission, or external success receipt exists.
 - Public-repository preflight passed for secrets, absolute user paths, tracked size, failure-injection exposure, license, IP disclosure and notices. GitHub publication remains blocked because the active `gh` token is invalid and the owner did not complete the device authorization before it expired.
@@ -54,7 +56,7 @@
 
 ## Unique NEXT
 
-After the owner completes Devpost/GitHub authentication and makes a Billing Account available, configure the isolated Google Cloud competition project and Vertex ADC. Before any deployment, run local `google-agent-run` for `complete_tender` and `blocked_missing_authorization`; both must pass the real-provider/FunctionTool evidence gate with no scripted marker. Only then run `infra/cloud-shell-deploy.sh` and capture one real `complete_tender` Job end-to-end. Success requires all of the following in the same evidence chain:
+The real-provider gate is complete. Next run `infra/cloud-shell-deploy.sh` and capture one real `complete_tender` Cloud Run Job end-to-end before opening the blocked fixture. Success requires all of the following in the same evidence chain:
 
 1. public Service returns 202 and records a real Cloud execution ID;
 2. Job reaches `completed` without a follow-up prompt;

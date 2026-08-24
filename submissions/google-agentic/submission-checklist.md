@@ -2,14 +2,14 @@
 
 ## Rules and eligibility
 
-- [ ] Entrant eligibility, employment, residence, IP and prize terms personally confirmed.
-- [ ] Credits request submitted and receipt saved.
+- [x] Entrant eligibility, employment, residence, IP and prize terms personally confirmed.
+- [x] Credits request submitted and receipt saved; approval remains pending.
 - [ ] Final Devpost form, judge access and deadline display rechecked.
 - [ ] Pre-existing work and third-party dependencies disclosed.
 
 ## Runtime evidence
 
-- [ ] Real `gemini-3.5-flash` provider evidence captured.
+- [x] Real `gemini-3.5-flash` provider evidence captured for local green and blocked FunctionTool routes.
 - [ ] Green case completed three times in Cloud Run Job.
 - [ ] Blocked case completed three times in Cloud Run Job.
 - [ ] One real legal recovery route captured.

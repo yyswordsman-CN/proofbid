@@ -1,31 +1,40 @@
 {
   "schema_version": "proofbid.external-gates/v1",
-  "observed_at": "2026-08-22T07:31:43Z",
+  "observed_at": "2026-08-24T13:57:39Z",
   "devpost": {
-    "authentication": "required",
-    "join_status": "owner_action_required",
-    "participant_mode": "intended_individual_solo",
-    "eligibility_attestation": "owner_action_required",
-    "receipt_saved": false
+    "authentication": "complete",
+    "join_status": "joined",
+    "participant_mode": "individual_solo",
+    "eligibility_attestation": "owner_confirmed",
+    "receipt_saved": true
   },
   "credits": {
-    "status": "BLOCKED_BILLING_ACCOUNT_MISSING",
-    "application_submitted": false,
-    "billing_account_id_available": false,
-    "receipt_saved": false
+    "status": "CREDITS_REQUEST_SUBMITTED",
+    "application_submitted": true,
+    "billing_account_id_available": true,
+    "receipt_saved": true,
+    "approved": false,
+    "redeemed": false
   },
   "google_cloud": {
-    "gcloud_available": false,
-    "vertex_environment_configured": false,
-    "adc_verified": false,
-    "project_created": false
+    "gcloud_available": true,
+    "gcloud_version": "581.0.0",
+    "project_id": "proofbid-agentic-yys-260822",
+    "billing_enabled": true,
+    "vertex_api_enabled": true,
+    "vertex_environment_configured": true,
+    "adc_verified": true,
+    "project_created": true,
+    "real_gemini_functiontools_verified": true,
+    "cloud_run_verified": false
   },
   "claims_excluded": [
-    "Devpost joined",
-    "eligibility confirmed",
-    "Credits applied",
     "Credits approved",
-    "Google Cloud project created",
-    "real Gemini call completed"
+    "Credits redeemed",
+    "Cloud Run deployed",
+    "Cloud Job completed",
+    "public repository published",
+    "video published",
+    "Devpost submission completed"
   ]
 }

@@ -1,13 +1,14 @@
-# Competition access gates — 2026-08-22
+# Competition access gates — updated 2026-08-24
 
-Observed at `2026-08-22T07:31:43Z` (`2026-08-22 15:31:43 +08:00`).
+Observed at `2026-08-24T13:57:39Z` (`2026-08-24 21:57:39 +08:00`).
 
 ## Current status
 
-- Devpost opened at its authentication/registration gate. Joining as an individual and all eligibility, employment, sanctions, conflict, and IP attestations require the owner to read the Rules and act personally. No Join receipt exists yet.
-- Credits status is `BLOCKED_BILLING_ACCOUNT_MISSING`. No Billing Account ID is available, so no Credits application is recorded as submitted and no receipt exists.
-- `gcloud` is not installed; Vertex environment variables and ADC are absent. No isolated Cloud project has been created or billed.
+- Devpost registration is complete as an individual solo entrant. The owner personally completed the eligibility and Rules attestations; a raw Join confirmation screenshot is retained in the ignored evidence directory.
+- The $150 Credits request was submitted on 2026-08-24 and is awaiting review. The confirmation receipt is retained locally. This is not evidence that Credits were approved or redeemed.
+- Google Cloud CLI 581.0.0 is installed. The isolated project `proofbid-agentic-yys-260822` exists with billing enabled, Vertex AI API enabled, user authentication complete, and ADC bound to the project for quota.
+- Real local Gemini FunctionTool green and blocked evidence passed on commit `7f183aa`; see `2026-08-24-real-gemini-functiontools.md`.
 
 ## Evidence boundary
 
-This receipt records access checks and blockers only. It is not evidence of Devpost membership, eligibility confirmation, a Credits application, Credits approval, Cloud project creation, or a real Gemini call. After the owner completes the Devpost action, the resulting page/email timestamp and receipt must be saved separately.
+This receipt now closes Devpost registration, Credits-request submission, Cloud project/ADC setup, and local real-Gemini gates. It is not evidence of Credits approval, Cloud Run/GCS/Logging execution, public repository publication, video publication, or final Devpost submission.

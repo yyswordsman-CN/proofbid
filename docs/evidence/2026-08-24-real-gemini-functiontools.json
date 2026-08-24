@@ -1,0 +1,72 @@
+{
+  "schema_version": "proofbid.real-gemini-evidence/v1",
+  "captured_at": "2026-08-24T13:57:39Z",
+  "source_commit": "7f183aa3c8af50f656201d96c4f19d17761a155b",
+  "google_cloud_project": "proofbid-agentic-yys-260822",
+  "gates": {
+    "provider": "google.gemini",
+    "auth_mode": "vertex_ai",
+    "configured_model": "gemini-3.5-flash",
+    "observed_model": "gemini-3.5-flash",
+    "finish_reason": "STOP",
+    "non_zero_usage": true,
+    "invocation_ids_present": true,
+    "all_function_call_ids_present_and_unique": true,
+    "scripted_marker_scan_passed": true
+  },
+  "runs": [
+    {
+      "fixture": "complete_tender",
+      "task_id": "task-661ce92c9534473a95ac",
+      "invocation_id": "e-91bcaa2f-b504-4376-91cf-5774bb0fb82f",
+      "status": "completed",
+      "terminal_tool": "finalize_complete",
+      "ready_for_human_review": true,
+      "ready_for_submission": true,
+      "missing_item_count": 0,
+      "function_tool_calls": 10,
+      "function_call_ids_present": 10,
+      "function_call_ids_unique": 10,
+      "event_count": 21,
+      "prompt_tokens": 1613,
+      "output_tokens": 20,
+      "total_tokens": 1650,
+      "duration_ms": 17942.144,
+      "zip_sha256": "57818bfcbcbb18e863c22c9f9e2e573a2ea7a2076ba158ad117dff325614e1ef",
+      "manifest_sha256": "bfa96be0455ac243e96a234cb1c5daa61cdb5877481c4ac36f502af29384733b",
+      "agent_run_sha256": "d2fcac2a54109405b5d23b4be332aad7a001da3ba36c1048d903a05c6c929af8",
+      "tool_receipts_sha256": "fde8c77de65dcfb65a169fc98963cd1ea4d00579c2a54a1fde3aa44cbe879536"
+    },
+    {
+      "fixture": "blocked_missing_authorization",
+      "task_id": "task-936c05fd3d1e40eb8830",
+      "invocation_id": "e-9c59549c-2de1-4486-bf76-7144a35879aa",
+      "status": "blocked",
+      "terminal_tool": "finalize_blocked",
+      "ready_for_human_review": false,
+      "ready_for_submission": false,
+      "missing_item_count": 1,
+      "missing_item_reason_code": "PROJECT_AUTHORIZATION_MISSING",
+      "function_tool_calls": 10,
+      "function_call_ids_present": 10,
+      "function_call_ids_unique": 10,
+      "event_count": 21,
+      "prompt_tokens": 1693,
+      "output_tokens": 19,
+      "total_tokens": 1740,
+      "duration_ms": 18522.967,
+      "zip_sha256": "eba79212d569c1a9e40dbdab16260473b52883cc533142ecd5b8d7a9760f6dde",
+      "manifest_sha256": "b2c6a5ceddac1632ed31c958cd755aaedc58eeba904911da29d99412e200d7c8",
+      "agent_run_sha256": "ff42fcfe60e1de27fc27a73ffd200f38a0a9f549938ee00cdee4883bab1eb378",
+      "tool_receipts_sha256": "5594e5fd4cb53af21633dced75dfdcd1ce81b158b17ce945d9d598da50c8a6fd"
+    }
+  ],
+  "boundaries": {
+    "cloud_run_verified": false,
+    "gcs_verified": false,
+    "cloud_logging_verified": false,
+    "credits_approved": false,
+    "public_repository_verified": false,
+    "devpost_submission_verified": false
+  }
+}
