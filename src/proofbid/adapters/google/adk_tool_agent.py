@@ -55,11 +55,12 @@ def _sha256_text(value: str) -> str:
 
 
 def _prompt(runtime: TaskRuntime) -> str:
+    task_spec_payload = runtime.task_spec.to_dict()
     payload = {
         "task_id": runtime.task_spec.task_id,
         "task_spec_digest": runtime.task_spec.digest,
         "goal": runtime.task_spec.goal,
-        "inputs": [item.to_dict() for item in runtime.task_spec.inputs],
+        "inputs": task_spec_payload["inputs"],
         "allowed_runtime_tools": [
             tool.value for tool in RuntimeTool if tool is not RuntimeTool.DECLARE_PLAN
         ],

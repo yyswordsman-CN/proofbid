@@ -16,6 +16,7 @@ from proofbid.agent_runtime_v2 import (
     build_adk_function_tools,
     run_scripted_agent_pipeline,
 )
+from proofbid.adapters.google.adk_tool_agent import _prompt
 from proofbid.intake import scan_workspace
 from proofbid.pipeline import REQUIRED_INPUTS, new_task_id
 from proofbid.planning import ProviderReceipt, build_task_spec
@@ -60,6 +61,23 @@ def _declare(runtime: TaskRuntime) -> None:
         parser_strategy="typed_manifest",
         failure_policy="bounded_retry_then_block",
     )
+
+
+def test_real_agent_prompt_serializes_task_inputs_from_task_spec_contract(
+    tmp_path: Path,
+) -> None:
+    runtime = _real_runtime(tmp_path)
+
+    prompt = _prompt(runtime)
+    payload = json.loads(prompt.split("\n", 1)[1])
+
+    assert payload["task_spec_digest"] == runtime.task_spec.digest
+    assert payload["inputs"] == runtime.task_spec.to_dict()["inputs"]
+    assert [item["relative_path"] for item in payload["inputs"]] == [
+        "bidder_profile.json",
+        "catalog.csv",
+        "tender.md",
+    ]
 
 
 def test_agent_v2_green_route_finishes_with_locked_high_risk_actions(
