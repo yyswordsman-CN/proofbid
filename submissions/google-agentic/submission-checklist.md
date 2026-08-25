@@ -3,7 +3,7 @@
 ## Rules and eligibility
 
 - [x] Entrant eligibility, employment, residence, IP and prize terms personally confirmed.
-- [x] Credits request submitted and receipt saved; approval remains pending.
+- [x] Credits approved and redeemed; redacted receipt and local raw evidence hashes saved.
 - [ ] Final Devpost form, judge access and deadline display rechecked.
 - [ ] Pre-existing work and third-party dependencies disclosed.
 

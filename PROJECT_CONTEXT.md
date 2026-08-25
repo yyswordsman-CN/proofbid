@@ -1,10 +1,10 @@
 # PROJECT_CONTEXT — ProofBid
 
-> Last updated: 2026-08-24
+> Last updated: 2026-08-25
 
 ## Current implementation
 
-- The independent Git repository now has two evidence-preserving baseline commits: `699a6f5` records the pre-fix code baseline and `7a4c744` records its local verification. No remote, push, tag, or public repository exists yet.
+- The independent Git repository preserves the original baseline commits (`699a6f5` and `7a4c744`), is public at `https://github.com/yyswordsman-CN/proofbid`, and has a clean verified `main`; no submission tag exists yet.
 - The project is Apache-2.0 licensed with `THIRD_PARTY_NOTICES.md` and an updated competition/IP snapshot.
 - The original deterministic v1 vertical slice remains intact for regression.
 - Two public-safe synthetic fixtures exist:
@@ -27,6 +27,7 @@
 
 - `PYTHONPATH=src .venv/bin/python -m pytest -q`: **69 passed**, 0 failed; three upstream deprecation warnings. V2-specific tests include undeclared tools, out-of-order calls, duplicate completion, input drift, wrong terminal branch, green/blocked/recovery routes, fixture single-variable invariants, stable missing-item reason codes, API state, FunctionTool call IDs, real-receipt rebinding, scripted-marker rejection, fixture allowlisting, evidence-summary redaction, revision digest extraction, installed-CLI asset-root resolution, and real-agent TaskSpec input serialization.
 - Google Cloud CLI 581.0.0 is installed. The isolated project `proofbid-agentic-yys-260822` has billing and Vertex AI enabled; user auth and Vertex ADC are configured with this project as quota project.
+- The All Things Agentic Hackathon USD 150 promotional Credits were approved and redeemed on 2026-08-25. The Billing UI shows the localized promotional balance available through 2026-09-24 and the separate Free Trial balance through 2026-11-23; a read-only CLI check reconfirmed `billingEnabled=True`. See `docs/evidence/2026-08-25-google-cloud-credits.md`.
 - Commit `7f183aa` passed real local `gemini-3.5-flash` + ADK FunctionTool execution for both public fixtures. Green reached `completed` with 1,650 tokens; blocked reached `blocked` with one `PROJECT_AUTHORIZATION_MISSING` item and 1,740 tokens. Both reported `google.gemini`, Vertex AI ADC, `STOP`, real invocation IDs, 10/10 unique non-null FunctionTool call IDs, no scripted marker, locked high-risk actions, and integrity-validated ZIPs. See `docs/evidence/2026-08-24-real-gemini-functiontools.md`.
 - Commit `704dbb6` is deployed with digest `sha256:17bbebcf2c3511b187279ee20cea9ec6359a6a6e763f66cfc0bbc056ce5c8aca`. Three green, three single-authorization blocked and one administrator-only renderer-recovery Cloud Run Job executions completed and independently reconciled across real Gemini/FunctionTool receipts, terminal state, Service/GCS ZIP hashes, revision/image digest and structured logs. The blocked runs each contain one `PROJECT_AUTHORIZATION_MISSING` item and both readiness flags false. The recovery run records `RENDER_TRANSIENT`, exactly one `retry_render`, and final completion. See `docs/evidence/cloud/2026-08-24-verified-closure.md`.
 - Three direct v2 routes: green `completed`, authorization case `blocked`, injected render failure recovered exactly once and `completed`; all artifact integrity gates passed.
@@ -42,7 +43,6 @@
 
 ## Evidence not yet obtained
 
-- The $150 Credits request is submitted and awaiting review; approval and redemption are not yet evidenced.
 - Seven verified cloud observations provide token and provider-duration samples, but no production P95 or attributed Google Cloud cost claim has been made.
 - The public repository exists at `https://github.com/yyswordsman-CN/proofbid`; `main` is pushed and public HTTPS clean-clone verification passed. No submission tag, video, Devpost submission, or final submission receipt exists.
 
@@ -55,4 +55,4 @@
 
 ## Unique NEXT
 
-The real-provider, cloud execution matrix and public HTTPS clean-clone gates are complete. Next perform one uncut 3:55 video rehearsal using the public Workbench, one green cloud execution, the single-authorization blocked result, provider/FunctionTool receipts, Cloud Run/Logging/GCS proof and an opened ZIP. Do not create the final tag or submit Devpost until the rehearsal is reviewed and Credits status is rechecked.
+The real-provider, cloud execution matrix, Credits and public HTTPS clean-clone gates are complete. Next perform one uncut 3:55 video rehearsal using the public Workbench, one green cloud execution, the single-authorization blocked result, provider/FunctionTool receipts, Cloud Run/Logging/GCS proof and an opened ZIP. Do not create the final tag or submit Devpost until the rehearsal is reviewed.

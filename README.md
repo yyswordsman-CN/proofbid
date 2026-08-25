@@ -195,7 +195,7 @@ The manifest and ZIP are exact-set validated and SHA-256 bound. The tool receipt
 
 Implemented and verified: synthetic green/blocked/recovery routes, bounded ADK FunctionTools, deterministic readiness, FastAPI task API, fixture deployment allowlist, structured lifecycle logs, administrator-only recovery launcher, redacted cloud evidence collector, local background worker, React workbench, container assets, real Vertex AI Gemini, and a three-green/three-blocked/one-recovery Cloud Run Job/GCS evidence matrix.
 
-Not yet verified here: a real Gemini network call, Google Cloud resource creation, Cloud Run deployment, public `.run.app` URL, Cloud Logging evidence, public repository, demo video, Credits request, or Devpost submission. See [PROJECT_CONTEXT.md](PROJECT_CONTEXT.md) for the current handoff and [rules-snapshot.md](docs/competition/rules-snapshot.md) for external-action gates.
+Also verified with separate receipts: real Gemini network calls, Google Cloud resource creation, Cloud Run deployment, the public `.run.app` service, Cloud Logging/GCS reconciliation, the public repository and clean clone, and Credits approval/redemption. Not yet verified: the public demo video, final submission tag, or Devpost submission. See [PROJECT_CONTEXT.md](PROJECT_CONTEXT.md) for the current handoff and [rules-snapshot.md](docs/competition/rules-snapshot.md) for external-action gates.
 
 ## License and IP
 
