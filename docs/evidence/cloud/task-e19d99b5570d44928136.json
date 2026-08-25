@@ -1,0 +1,172 @@
+{
+  "agent": {
+    "function_call_ids": [
+      "call_3117612",
+      "call_191271",
+      "call_63590",
+      "call_184767",
+      "call_341343",
+      "call_231215",
+      "call_242551",
+      "call_2870251",
+      "call_71097",
+      "call_319499"
+    ],
+    "recovery_receipts": [],
+    "status": "blocked",
+    "tool_call_count": 10,
+    "tool_receipts_digest": "862ca37ad77e592f6a3aabf12944eefb9e3894801126184a45ff0a61f4a87e1c"
+  },
+  "collected_at": "2026-08-25T08:28:19.072600+00:00",
+  "gcs": {
+    "agent_run.json": {
+      "crc32c": null,
+      "generation": "1787646388598428",
+      "md5_hash": null,
+      "sha256": "fa1c950c844502b28d22a1531d8449faace627a3c30e24ae320cff9bf1403b14",
+      "size": 2055
+    },
+    "manifest.json": {
+      "crc32c": null,
+      "generation": "1787646389267283",
+      "md5_hash": null,
+      "sha256": "a1c990bcda790816daa2fd478cffed3f50ea74262923aa4ac761216b84934ec5",
+      "size": 1868
+    },
+    "planner_receipt.json": {
+      "crc32c": null,
+      "generation": "1787646388301724",
+      "md5_hash": null,
+      "sha256": "579b1199b57a8323f16ae4f60a86ddff0f467084b46874a187459b9f647c4654",
+      "size": 855
+    },
+    "proofbid_bundle.zip": {
+      "crc32c": null,
+      "generation": "1787646389364039",
+      "md5_hash": null,
+      "sha256": "d5625dda3e7bb8f062531595f4f5e8c4774ac0d1ff5c42a65f2f5aee34150f9c",
+      "size": 79169
+    },
+    "tool_receipts.jsonl": {
+      "crc32c": null,
+      "generation": "1787646388477457",
+      "md5_hash": null,
+      "sha256": "201145d93752aaf889115be0b44907f77912ad8c608a45d49489683d0c14d359",
+      "size": 4294
+    }
+  },
+  "job": {
+    "completion_time": "2026-08-25T08:26:33.024415Z",
+    "execution": "projects/proofbid-agentic-yys-260822/locations/us-central1/jobs/proofbid-agent/executions/proofbid-agent-htj58",
+    "fixture_id": "blocked_missing_authorization",
+    "name": "proofbid-agent",
+    "observed_name": "proofbid-agent-htj58",
+    "render_failure_injected": false
+  },
+  "logs": {
+    "events": [
+      {
+        "event": "delivery_ready",
+        "invocation_id": null,
+        "reason_code": null,
+        "severity": null,
+        "status": "blocked",
+        "task_id": "task-e19d99b5570d44928136",
+        "timestamp": "2026-08-25T08:26:29.568095Z"
+      },
+      {
+        "event": "provider_completed",
+        "invocation_id": "e-e20f6edf-3123-4d35-b592-4195da4e6d8b",
+        "reason_code": null,
+        "severity": null,
+        "status": null,
+        "task_id": "task-e19d99b5570d44928136",
+        "timestamp": "2026-08-25T08:26:29.378682Z"
+      },
+      {
+        "event": "running",
+        "invocation_id": null,
+        "reason_code": null,
+        "severity": null,
+        "status": null,
+        "task_id": "task-e19d99b5570d44928136",
+        "timestamp": "2026-08-25T08:26:10.851730Z"
+      },
+      {
+        "event": "job_queued",
+        "invocation_id": null,
+        "reason_code": null,
+        "severity": null,
+        "status": null,
+        "task_id": "task-e19d99b5570d44928136",
+        "timestamp": "2026-08-25T08:23:48.243084Z"
+      },
+      {
+        "event": "accepted",
+        "invocation_id": null,
+        "reason_code": null,
+        "severity": null,
+        "status": null,
+        "task_id": "task-e19d99b5570d44928136",
+        "timestamp": "2026-08-25T08:23:47.913762Z"
+      }
+    ],
+    "query": "jsonPayload.task_id=\"task-e19d99b5570d44928136\" OR textPayload:\"task-e19d99b5570d44928136\""
+  },
+  "project": "proofbid-agentic-yys-260822",
+  "provider": {
+    "adk_version": "2.7.1",
+    "auth_mode": "vertex_ai",
+    "configured_model": "gemini-3.5-flash",
+    "duration_ms": 13070.905,
+    "event_count": 21,
+    "finish_reason": "STOP",
+    "genai_version": "2.18.1",
+    "interaction_id": null,
+    "invocation_id": "e-e20f6edf-3123-4d35-b592-4195da4e6d8b",
+    "model_version": "gemini-3.5-flash",
+    "output_tokens": 23,
+    "plan_digest": "1774af227cf0c757fc76b2c44105b7ce0e3baf778237fbf6c04262cef1efe288",
+    "policy_validated": true,
+    "prompt_tokens": 1735,
+    "provider": "google.gemini",
+    "request_digest": "f08c50baa7b3bba48a7be4ac466fd4c5e7cd5307bf81d92d1e990165d274151a",
+    "response_digest": "c971e6889c6813eba45612642ce3970d720d582acedde67a111d3f90e79dfd8d",
+    "schema_validated": true,
+    "schema_version": "proofbid.provider-receipt/v1",
+    "started_at": "2026-08-25T08:26:14.475866+00:00",
+    "total_tokens": 1777
+  },
+  "reconciliation": {
+    "all_function_call_ids_present": true,
+    "build_matches_revision_source": true,
+    "provider_download_sha256": "579b1199b57a8323f16ae4f60a86ddff0f467084b46874a187459b9f647c4654",
+    "provider_hash_matches_manifest": true,
+    "provider_manifest_sha256": "579b1199b57a8323f16ae4f60a86ddff0f467084b46874a187459b9f647c4654",
+    "revision_image_is_digest_pinned": true,
+    "service_zip_matches_gcs": true,
+    "service_zip_sha256": "d5625dda3e7bb8f062531595f4f5e8c4774ac0d1ff5c42a65f2f5aee34150f9c",
+    "zip_sha256": "d5625dda3e7bb8f062531595f4f5e8c4774ac0d1ff5c42a65f2f5aee34150f9c"
+  },
+  "region": "us-central1",
+  "schema_version": "proofbid.cloud-evidence/v1",
+  "service": {
+    "build_version": "704dbb6d7d7e8114f93bc0dfdf1f18df73267bfd",
+    "image": "us-central1-docker.pkg.dev/proofbid-agentic-yys-260822/proofbid/proofbid:704dbb6d7d7e8114f93bc0dfdf1f18df73267bfd",
+    "image_digest": "us-central1-docker.pkg.dev/proofbid-agentic-yys-260822/proofbid/proofbid@sha256:17bbebcf2c3511b187279ee20cea9ec6359a6a6e763f66cfc0bbc056ce5c8aca",
+    "name": "proofbid",
+    "revision": "proofbid-00003-kdd",
+    "url": "https://proofbid-um2t63h7ha-uc.a.run.app"
+  },
+  "task": {
+    "artifact_integrity_passed": true,
+    "blocking_reason_codes": [
+      "MANDATORY_REQUIREMENT_RESOLVED",
+      "PROJECT_AUTHORIZATION_MISSING"
+    ],
+    "build_version": "704dbb6d7d7e8114f93bc0dfdf1f18df73267bfd",
+    "missing_item_count": 1,
+    "status": "blocked",
+    "task_id": "task-e19d99b5570d44928136"
+  }
+}

@@ -39,6 +39,7 @@
 - `docker build -t proofbid:local .`: multi-stage image built successfully after transient registry retries.
 - The non-root built image ran the complete tender through Agent v2 and returned `completed`, both readiness flags `true`, 10 tool calls, and artifact integrity passed.
 - A fresh public HTTPS clone of `https://github.com/yyswordsman-CN/proofbid.git` at commit `dc9d756` passed Python 3.12.13 dependency installation, 69 tests, 50/50 Eval, Node 22.22.3 install/build, 6/6 Playwright, Workbench health/202/poll/download, Docker build, ZIP integrity, a non-root container green route, and the final clean-worktree gate. See `docs/evidence/2026-08-24-public-clean-clone.md`.
+- A clean public-browser video timing probe ran one new green and one new single-authorization blocked Cloud Run Job. Browser click-to-terminal observations were about 145 seconds and 178 seconds respectively; both independently reconciled real Gemini/FunctionTool, logs, revision/image digest and Service/GCS ZIP hashes. The green ZIP was downloaded again and passed `unzip -t`. See `docs/evidence/2026-08-25-video-rehearsal-timing.md`.
 - Repository scan found no populated API keys/private keys, user name, or absolute local project path.
 
 ## Evidence not yet obtained
@@ -55,4 +56,4 @@
 
 ## Unique NEXT
 
-The real-provider, cloud execution matrix, Credits and public HTTPS clean-clone gates are complete. Next perform one uncut 3:55 video rehearsal using the public Workbench, one green cloud execution, the single-authorization blocked result, provider/FunctionTool receipts, Cloud Run/Logging/GCS proof and an opened ZIP. Do not create the final tag or submit Devpost until the rehearsal is reviewed.
+The real-provider, cloud execution matrix, Credits, public HTTPS clean clone and browser timing probe are complete. Next record and review one uncut 3:55 rehearsal using the measured sequence: start one green cloud execution at 0:00, use its provisioning interval for architecture/cloud proof, then show its completed delivery and a real blocked result pre-run immediately before recording. Do not create the final tag or submit Devpost until that recording is reviewed.
