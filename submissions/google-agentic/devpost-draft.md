@@ -1,6 +1,6 @@
 # ProofBid — Devpost draft
 
-> Draft only. Replace every bracketed field with verified public evidence before submission.
+> Draft only. Public evidence fields below are resolved; recheck the final Devpost form and every rendered field before submission.
 
 ## Tagline
 
@@ -52,11 +52,11 @@ Agent autonomy is strongest when its decision rights are explicit. A constrained
 
 After the competition demo, the next product step is versioned public-document parsing and human approval receipts—not automated signing or submission.
 
-## Required evidence before publish
+## Required evidence before submission
 
 - Repository: `https://github.com/yyswordsman-CN/proofbid`
 - Demo: `https://proofbid-um2t63h7ha-uc.a.run.app`
-- Video: `[PUBLIC_YOUTUBE_OR_VIMEO_URL]`
-- Runtime source commit: `704dbb6d7d7e8114f93bc0dfdf1f18df73267bfd`; submission tag: `[FINAL_TAG]`
+- Video: `https://youtu.be/E4Ke_cWLFus`
+- Runtime source commit: `704dbb6d7d7e8114f93bc0dfdf1f18df73267bfd`; submission tag: `google-agentic-2026-submission`
 - Cloud revisions: `proofbid-00002-jq7` (green-only) and `proofbid-00003-kdd` (two-fixture); image digest `sha256:17bbebcf2c3511b187279ee20cea9ec6359a6a6e763f66cfc0bbc056ce5c8aca`
 - Real Gemini/Cloud execution evidence: `docs/evidence/cloud/2026-08-24-verified-closure.md`

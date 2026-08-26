@@ -3,6 +3,8 @@
 ## Rules and eligibility
 
 - [x] Entrant eligibility, employment, residence, IP and prize terms personally confirmed.
+- [x] Official Rules, FAQ, latest submission checklist and Demo self-check refreshed on 2026-08-26.
+- [x] Project start date is inside the 2026-08-03 to 2026-08-31 Submission Period; pre-existing work disclosure is current.
 - [x] Credits approved and redeemed; redacted receipt and local raw evidence hashes saved.
 - [ ] Final Devpost form, judge access and deadline display rechecked.
 - [x] Pre-existing work and third-party dependencies disclosed.
@@ -26,13 +28,22 @@
 - [x] Python tests, frontend build, Playwright and 50-case Eval rerun from the public clone.
 - [x] Docker build/container green route and Workbench health/202/poll/download pass from that clone.
 - [x] English architecture SVG and exact 1920×1080 PNG regenerated with Mermaid CLI 11.16.0.
-- [ ] Git commit/tag and source archive hash saved.
+- [x] Local freeze commit and annotated tag `google-agentic-2026-submission` created.
+- [ ] Frozen commit/tag pushed and anonymously verified from the public repository.
+- [ ] Source archive hash saved with the final submission receipt.
 
 ## Demo and submission
 
-- [ ] Public English video is 4:00 or shorter and shows the real app running.
-- [ ] Video shows Google Cloud backend proof.
+- [x] Public English video is 4:00 or shorter and shows the real app running.
+- [x] Video shows Google Cloud backend proof.
+- [x] Exact-window source review passes; final edit shows no desktop, unrelated app, email, secret, notification, billing identifier or sensitive account context.
+- [x] A continuous real green click-to-accepted segment appears within the first 10–15 seconds.
+- [x] Any queue/loading cuts are transparent and preserve the same green task/execution identity; `demo-clip-ledger.md` reconciles source file, time range, task ID, execution ID and receipt.
+- [x] Green delivery, separately identified blocked result, Gemini/ADK identity, Cloud proof and repository/reproducibility are readable without pausing.
+- [x] English narration is clear or English subtitles are accurate; audio/captions receive a full review.
+- [x] Duration/media probe confirms at most 4:00 and a readable final encode; resolution, frame rate and audio layout are recorded as delivery facts, not invented eligibility rules.
 - [x] Public demo works in a clean browser without privileged credentials; real green and blocked timing probe recorded.
-- [ ] Devpost copy contains only verified claims and URLs.
+- [x] Devpost draft contains only verified claims and resolved public evidence URLs; final rendered form remains to be checked.
 - [ ] Submit early; save screenshot, timestamp, confirmation email and final URLs.
-- [ ] Do not change judged repository, video or demo after freeze without documenting why.
+- [x] Final video hash, clip ledger and review notes saved before publication.
+- [ ] After the deadline, do not change the judged repository, video or demo; continue development only on a separate branch or copy.

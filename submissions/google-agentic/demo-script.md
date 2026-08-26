@@ -1,63 +1,107 @@
 # Four-minute demo script
 
-> Target length: 3:55. English narration or verified English subtitles. The green and blocked executions must be real Cloud Run Job runs, not UI mocks. The measured public-browser probe took about 2:25 for green and 2:58 for blocked, so only green runs during recording; blocked is executed immediately beforehand and kept open in a separate tab.
+> Target length: 3:30–3:50. Use clear English narration or accurate English subtitles. The video may use transparent cuts to remove Cloud Run queue/loading time, but every execution claim must remain bound to one real task/execution ID and reconciled Cloud evidence.
+>
+> Execution status: completed as a verified 3:31.221 English master and
+> published at `https://youtu.be/E4Ke_cWLFus`; exact ranges, task bindings and
+> review evidence are frozen in `demo-clip-ledger.md`.
 
-## Before recording — prepare without faking
+## Source-footage policy
 
-- Run `Authorization missing` once in the public Workbench and keep the completed tab open at `Missing items = 1`.
-- Pre-open the architecture PNG, Cloud Run Job execution list, redacted evidence receipt, public repository, and a previously verified extracted green ZIP as a navigation backup.
-- Return to a fresh public Workbench home. Do not start the green route until recording begins.
+- Prefer reusing the privacy-clean, independently reconciled second-take green execution recorded on 2026-08-26 for the opening click, accepted state, completed result and receipts if those frames remain legible after editing.
+- Use the verified blocked execution captured immediately before that take for the blocked comparison.
+- Add fresh local-only clips for architecture, repository and narration as needed; these do not require a new Cloud task.
+- Request explicit authorization for one new green Cloud execution only if the verified source footage cannot produce a truthful, readable final edit. A failed edit does not authorize another execution.
+- Never combine the start of one task with the result or receipt of another while presenting them as the same run. Keep a clip ledger with task ID, Cloud execution ID, source file/time range and evidence receipt.
 
-## 0:00–0:10 — Start the real green event
+## Before editing or recording
 
-Click `Complete tender package` once. Keep the accepted task and Cloud execution ID visible.
+- Bind capture to the exact Chrome demo window. Do not capture the desktop, another app, notification, account email, secret, billing identifier or unrelated content.
+- Inspect every source clip before import. The first failed 2026-08-26 take exposed unrelated Feishu/WPS content and must never be used, shared or published.
+- Pre-open the architecture PNG, redacted Cloud evidence, public repository and a previously verified extracted green ZIP.
+- Prepare concise English narration. Do not leave a silent wait section when the same verified story can be shown with a transparent cut.
+- Preserve the original source files and record all edits in the clip ledger; do not alter raw evidence.
 
-“One public-safe tender event starts a real Cloud Run Job. While it provisions, here is why the task and its controls matter.”
+## 0:00–0:15 — Real action immediately
 
-## 0:10–0:35 — Problem and value
+Show one continuous exact-window segment: click `Complete tender package`, then keep the accepted task ID and Cloud execution ID visible.
 
-“Tender preparation is not a chat question. It is a multi-step professional task where every claim needs evidence, every number must agree across files, and one missing authorization can invalidate the package. ProofBid takes one event and autonomously delivers a reviewable tender-preparation bundle.”
+“One public-safe tender event starts a real Cloud Run Job. ProofBid will autonomously build and validate a reviewable tender-preparation package.”
 
-## 0:35–1:05 — Architecture
+The visible product action must begin within the first 10–15 seconds. A cut may follow after the accepted state is readable.
 
-Show `docs/architecture/proofbid-google-cloud-1920x1080.png` full-screen.
+## 0:15–0:40 — Problem and value
 
-“The React event reaches a Cloud Run service, which returns 202 and starts a Cloud Run Job. Gemini 3.5 Flash routes Google ADK FunctionTools. Deterministic code owns facts, BOM, rendering, and release. Cloud Storage keeps state, receipts, Trace, and the final ZIP.”
+Show the Workbench problem framing and transition to the architecture.
 
-## 1:05–2:15 — Backend and bounded autonomy while green runs
+“Tender preparation is not a chat question. Every claim needs evidence, every number must agree across files, and one missing authorization can invalidate the package. ProofBid completes the safe preparation task while keeping signing and submission locked.”
 
-Show the current execution in Cloud Run, then the source-bound revision/image digest and a recorded redacted FunctionTool receipt from the same pinned runtime revision.
+## 0:40–1:10 — Architecture and bounded autonomy
 
-“Gemini chooses the bounded tool order and legal terminal branch. It cannot provide paths, facts, prices, shell, SQL, URLs, or submission actions. Deterministic tools own evidence, calculation, rendering, and release.”
+Show `docs/architecture/proofbid-google-cloud-1920x1080.png`.
 
-Return to the green Workbench around 2:15. If it remains queued, use the remaining narration buffer without hiding the wait.
+“The React event reaches a Cloud Run service, which returns 202 and starts a Cloud Run Job. Gemini 3.5 Flash routes Google ADK FunctionTools. Deterministic code owns facts, BOM, rendering, validation and release. Cloud Storage keeps state, receipts, Trace and the final ZIP.”
 
-## 2:15–2:55 — Green completion
+Show the tool boundary briefly:
 
-Show the complete timeline when the live route reaches `completed`.
+“Gemini can choose registered tools, dependency-valid order, the correct terminal branch and one legal renderer retry. It cannot provide paths, facts, prices, shell, SQL, URLs or submission actions.”
 
-“No follow-up prompt is needed. The agent scans the immutable input manifest, chooses tools, builds the evidence-bound analysis, renders the package, runs both validation layers, and selects `finalize_complete` only after readiness is true.”
+## 1:10–1:35 — Google Cloud proof
 
-Open Validation and Artifacts. Trigger the ZIP download. Show `ready_for_human_review=true`, `ready_for_submission=true`, `submission_executed=false`, and locked high-risk actions.
+Show the Cloud Run Job execution and source-bound revision/image digest for the same green task shown at the start.
 
-## 2:55–3:20 — Real blocked result
+“This execution runs on Cloud Run with Vertex AI credentials. The deployed revision is bound to a source commit and container digest; Cloud logs and task state preserve the same execution identity.”
 
-Switch to the real blocked Workbench tab completed immediately before recording.
+Do not show raw Billing, account email, project-owner details or unredacted logs.
 
-“The same autonomous workflow reaches a different business terminal state. Project authorization is absent. ProofBid does not infer it from the product catalog and does not fabricate it. The agent selects `finalize_blocked`, then delivers a validated evidence ledger and missing-item package.”
+## 1:35–2:15 — Green completion and delivery
 
-Show `Missing items = 1`, `PROJECT_AUTHORIZATION_MISSING`, both readiness flags `false`, and the still-downloadable validated ZIP.
+After a clear cut labeled only by the natural UI/time transition, show the same task ID at `completed`.
 
-## 3:20–3:42 — Agent and cloud proof
+“No follow-up prompt is needed. The agent scans the immutable input manifest, chooses tools, builds the evidence-bound analysis, renders the package, runs both validation layers and selects `finalize_complete` only after readiness is true.”
 
-Show the redacted `proofbid-cloud-evidence` summary, `agent_run.json`, `tool_receipts.jsonl`, the Cloud Run Job execution, and matching Cloud Logging/GCS timestamps and hashes.
+Open Validation and Artifacts. Show:
 
-“The receipt records the observed Gemini model version, usage, finish reason, invocation ID, tool choices, retry relationship, and digest chain—without secrets, prompts, or hidden reasoning.”
+- 12/12 requirements matched;
+- 63 evidence refs and zero missing items;
+- both readiness flags `true`;
+- `submission_executed=false`;
+- high-risk actions locked;
+- downloadable validated ZIP.
 
-Do not add a live recovery run. If time permits, point to the recorded recovery receipt where `render_delivery` returns `RENDER_TRANSIENT` and Gemini chooses `retry_render` exactly once.
+## 2:15–2:50 — Real blocked result
 
-## 3:42–3:55 — Reproducibility
+Switch to the separately verified blocked Workbench result and clearly identify it as a second real task.
 
-Show the public repository, Apache-2.0 license, quick start, test result, 50-case Eval result, commit/tag, and Cloud revision digest.
+“The same workflow reaches a truthful business terminal state when project authorization is absent. ProofBid does not infer it from the catalog and does not fabricate it. The agent selects `finalize_blocked` and still delivers a validated evidence ledger and missing-item package.”
+
+Show:
+
+- `Missing items = 1`;
+- `PROJECT_AUTHORIZATION_MISSING`;
+- both readiness flags `false`;
+- validated ZIP still available.
+
+## 2:50–3:20 — Receipts and recovery evidence
+
+Show the redacted evidence summary, `agent_run.json`, `tool_receipts.jsonl`, matching Cloud execution identity and digest chain.
+
+“The receipt records the observed Gemini model version, usage, finish reason, invocation ID, tool choices and digest chain—without secrets, prompts or hidden reasoning.”
+
+If time permits, point to the existing administrator-only recovery receipt where `render_delivery` returns `RENDER_TRANSIENT` and Gemini chooses `retry_render` exactly once. Do not add a live recovery run.
+
+## 3:20–3:45 — Reproducibility and close
+
+Show the public repository, Apache-2.0 license, quick start, architecture, test evidence, 50-case Eval and Cloud revision binding.
 
 “ProofBid completes the safe professional task, explains truthful blockers, and keeps signing and submission under human control.”
+
+## Post-edit acceptance
+
+- Public video is no longer than 4:00, publicly hosted on YouTube or Vimeo, and uses English narration or accurate English subtitles.
+- Product action is visible within the first 10–15 seconds; the opening segment is one continuous real click-to-accepted action.
+- Every execution transition reconciles task ID, Cloud execution ID, timestamps, revision/image digest and the corresponding redacted receipt.
+- Full video review finds no desktop, unrelated app, email, secret, notification, billing identifier or other sensitive context.
+- Audio is understandable if present; captions are accurate and readable. Resolution and frame rate are visually sufficient but are not treated as official eligibility requirements.
+- Architecture, Gemini/ADK identity, Google Cloud proof, green delivery, blocked result and repository/reproducibility are all readable without pausing.
+- Save the final video hash, clip ledger, duration probe and review notes. Do not publish, tag or submit without explicit authorization.

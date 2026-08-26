@@ -129,7 +129,7 @@ npm run build
 npm run test:e2e
 ```
 
-The latest post-change local run passed 67 Python tests and 6 Playwright desktop/mobile checks. Treat these counts as a dated snapshot, not a permanently fixed target.
+The latest post-change local run passed 69 Python tests and 6 Playwright desktop/mobile checks. Treat these counts as a dated snapshot, not a permanently fixed target.
 
 The Playwright suite covers desktop and mobile layouts, both public fixture entry points, the complete event-to-download route, and horizontal overflow. Python tests cover deterministic regression, green/blocked/recovery agent routes, fail-closed contracts, API 202/poll/download gates, manifests, ZIPs, Word, and Excel consistency.
 
@@ -195,7 +195,7 @@ The manifest and ZIP are exact-set validated and SHA-256 bound. The tool receipt
 
 Implemented and verified: synthetic green/blocked/recovery routes, bounded ADK FunctionTools, deterministic readiness, FastAPI task API, fixture deployment allowlist, structured lifecycle logs, administrator-only recovery launcher, redacted cloud evidence collector, local background worker, React workbench, container assets, real Vertex AI Gemini, and a three-green/three-blocked/one-recovery Cloud Run Job/GCS evidence matrix.
 
-Also verified with separate receipts: real Gemini network calls, Google Cloud resource creation, Cloud Run deployment, the public `.run.app` service, Cloud Logging/GCS reconciliation, the public repository and clean clone, and Credits approval/redemption. Not yet verified: the public demo video, final submission tag, or Devpost submission. See [PROJECT_CONTEXT.md](PROJECT_CONTEXT.md) for the current handoff and [rules-snapshot.md](docs/competition/rules-snapshot.md) for external-action gates.
+Also verified with separate receipts: real Gemini network calls, Google Cloud resource creation, Cloud Run deployment, the public `.run.app` service, Cloud Logging/GCS reconciliation, the public repository and clean clone, Credits approval/redemption, and the public English demo video with anonymous playback. The local submission snapshot is identified by the annotated tag `google-agentic-2026-submission`; publishing the frozen refs and submitting Devpost remain separately controlled and unverified. See [PROJECT_CONTEXT.md](PROJECT_CONTEXT.md) for the current handoff and [rules-snapshot.md](docs/competition/rules-snapshot.md) for external-action gates.
 
 ## License and IP
 
